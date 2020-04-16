@@ -1,12 +1,22 @@
 {
-  "name": "qcom",
+  "name": "@qcom.io/qcom",
   "version": "1.0.0",
   "description": "A Brand new JS Framework for creating Custom web components with Dynamic HTML generator functions No more HTML tags and css styling.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["framework"],
+  "keywords": [
+    "framework"
+  ],
   "author": "Mahesh Kariya",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maheshkareeya/qcom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maheshkareeya/qcom/issues"
+  },
+  "homepage": "https://github.com/maheshkareeya/qcom#readme"
 }

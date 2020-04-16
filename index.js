@@ -821,254 +821,254 @@ export class Eye{
 
 
 }
-export class Mongo{
-    constructor(hold){
-        this.db = hold.db
-        this.url = hold.url
-        this.schema = hold.schema
-    }
-    find = async (data = {}) => {
-        let result;
-        if(navigator.onLine){
-            if($$('deleteddata') != null){
-                let store1 = $$('deleteddata')
-                store1.forEach(async(item)=>{
-                    await this.findByIdAndDelete(item)
-                })
-                $$('deleteddata',null)
-            }
-            if($$('newdata') != null){
-                let store2 = $$('newdata')
-                store2.forEach(async(item)=>{
-                    await this.save(item)
-                })
-                $$('newdata',null)
-            }
-        // console.log('online')
-        const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/find', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-         result = await response.json()
-            $$('result',result)
-            // console.log("online",$$('result'));
-           } else {
-         result = $$('result')
-            console.log("offline",result);
-           }
-        // console.log(result)
-        return result; // parses JSON response into native JavaScript objects
-      }
-      findOne = async (data = {}) => {
+// export class Mongo{
+//     constructor(hold){
+//         this.db = hold.db
+//         this.url = hold.url
+//         this.schema = hold.schema
+//     }
+//     find = async (data = {}) => {
+//         let result;
+//         if(navigator.onLine){
+//             if($$('deleteddata') != null){
+//                 let store1 = $$('deleteddata')
+//                 store1.forEach(async(item)=>{
+//                     await this.findByIdAndDelete(item)
+//                 })
+//                 $$('deleteddata',null)
+//             }
+//             if($$('newdata') != null){
+//                 let store2 = $$('newdata')
+//                 store2.forEach(async(item)=>{
+//                     await this.save(item)
+//                 })
+//                 $$('newdata',null)
+//             }
+//         // console.log('online')
+//         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/find', {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify(data) // body data type must match "Content-Type" header
+//         });
+//          result = await response.json()
+//             $$('result',result)
+//             // console.log("online",$$('result'));
+//            } else {
+//          result = $$('result')
+//             console.log("offline",result);
+//            }
+//         // console.log(result)
+//         return result; // parses JSON response into native JavaScript objects
+//       }
+//       findOne = async (data = {}) => {
 
-        const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findOne', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-        return await response.json(); // parses JSON response into native JavaScript objects
-      }
+//         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findOne', {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify(data) // body data type must match "Content-Type" header
+//         });
+//         return await response.json(); // parses JSON response into native JavaScript objects
+//       }
 
-      findById = async (data) => {
-        let findresult = []
-        if(navigator.onLine){
-        console.log('online')
-        const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findById', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify({id:data}) // body data type must match "Content-Type" header
-        });
-        findresult = await response.json();
-        console.log(findresult)
-    }else{
-        findresult = $$('result').filter(item=>item._id == data)
-        findresult = findresult[0]
-        console.log(findresult)
-    }
-        return findresult; // parses JSON response into native JavaScript objects
-      }
-      findByIdAndDelete = async (data) => {
-          let deletedresult
-        if(navigator.onLine){
-            console.log('online')
-        const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findByIdAndDelete', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify({id:data}) // body data type must match "Content-Type" header
-        });
-        deletedresult = await response.json()
+//       findById = async (data) => {
+//         let findresult = []
+//         if(navigator.onLine){
+//         console.log('online')
+//         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findById', {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify({id:data}) // body data type must match "Content-Type" header
+//         });
+//         findresult = await response.json();
+//         console.log(findresult)
+//     }else{
+//         findresult = $$('result').filter(item=>item._id == data)
+//         findresult = findresult[0]
+//         console.log(findresult)
+//     }
+//         return findresult; // parses JSON response into native JavaScript objects
+//       }
+//       findByIdAndDelete = async (data) => {
+//           let deletedresult
+//         if(navigator.onLine){
+//             console.log('online')
+//         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findByIdAndDelete', {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify({id:data}) // body data type must match "Content-Type" header
+//         });
+//         deletedresult = await response.json()
 
-       } else {
-        let result = $$('result')
-        let deleteddata
-        if($$('deleteddata') == null){
-            deleteddata = []
-        }else{
-            deleteddata = $$('deleteddata')
-        }
+//        } else {
+//         let result = $$('result')
+//         let deleteddata
+//         if($$('deleteddata') == null){
+//             deleteddata = []
+//         }else{
+//             deleteddata = $$('deleteddata')
+//         }
 
-        result = result.filter(item => item._id !== data)
-        deleteddata.push(data)
-        $$('deleteddata',deleteddata)
-        console.log(deleteddata)
-        $$('result',result)
-        deletedresult = 'offline'
-       }
-        return deletedresult; // parses JSON response into native JavaScript objects
-      }
+//         result = result.filter(item => item._id !== data)
+//         deleteddata.push(data)
+//         $$('deleteddata',deleteddata)
+//         console.log(deleteddata)
+//         $$('result',result)
+//         deletedresult = 'offline'
+//        }
+//         return deletedresult; // parses JSON response into native JavaScript objects
+//       }
 
-      findByIdAndUpdate = async (data,updates) => {
-        const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findByIdAndUpdate', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify({id:data,data:updates}) // body data type must match "Content-Type" header
-        });
-        return await response.json(); // parses JSON response into native JavaScript objects
-    }
-      save = async (data) => {
-        let saveresult
-        if(navigator.onLine){
-            console.log('online')
-        const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/save', {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-        saveresult = await response.json(); // parses JSON response into native JavaScript objects
-      }else {
-        let result = $$('result')
-        let newdata
-        if($$('newdata') == null){
-            newdata = []
-        }else{
-            newdata = $$('newdata')
-        }
-        // data['_id'] = String(JSON.stringify(data).hash())
-        newdata.push(data)
-        $$('newdata',newdata)
-        console.log(newdata)
-        result.push(data)
-        $$('result',result)
-        saveresult = 'offline'
-       }
-       return saveresult
-    }
+//       findByIdAndUpdate = async (data,updates) => {
+//         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findByIdAndUpdate', {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify({id:data,data:updates}) // body data type must match "Content-Type" header
+//         });
+//         return await response.json(); // parses JSON response into native JavaScript objects
+//     }
+//       save = async (data) => {
+//         let saveresult
+//         if(navigator.onLine){
+//             console.log('online')
+//         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/save', {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify(data) // body data type must match "Content-Type" header
+//         });
+//         saveresult = await response.json(); // parses JSON response into native JavaScript objects
+//       }else {
+//         let result = $$('result')
+//         let newdata
+//         if($$('newdata') == null){
+//             newdata = []
+//         }else{
+//             newdata = $$('newdata')
+//         }
+//         // data['_id'] = String(JSON.stringify(data).hash())
+//         newdata.push(data)
+//         $$('newdata',newdata)
+//         console.log(newdata)
+//         result.push(data)
+//         $$('result',result)
+//         saveresult = 'offline'
+//        }
+//        return saveresult
+//     }
 
-}
+// }
 
-class Axios {
-    constructor(hold){
+// class Axios {
+//     constructor(hold){
 
-    }
-    get = async (val) =>{
-        let response = await fetch(val);
-        let commits = await response.json();
-        return commits
-    }
-    getone = async (val,id) =>{
-        let response;
-        if(val.endsWith("/") === true){
-            response = await fetch(val+id);}
-        else{
-            response = await fetch(val+'/'+id);}
-        let commits = await response.json();
-        return commits.data
-    }
-    delete = async (val) =>{
-        let response = await fetch(val, {
-        method: 'DELETE',
-        })
-        let commits = await response.json();
-        return commits
+//     }
+//     get = async (val) =>{
+//         let response = await fetch(val);
+//         let commits = await response.json();
+//         return commits
+//     }
+//     getone = async (val,id) =>{
+//         let response;
+//         if(val.endsWith("/") === true){
+//             response = await fetch(val+id);}
+//         else{
+//             response = await fetch(val+'/'+id);}
+//         let commits = await response.json();
+//         return commits.data
+//     }
+//     delete = async (val) =>{
+//         let response = await fetch(val, {
+//         method: 'DELETE',
+//         })
+//         let commits = await response.json();
+//         return commits
 
-    }
-     post = async (url = '', data = {}) => {
-        // Default options are marked with *
-        const response = await fetch(url, {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-        return await response.json(); // parses JSON response into native JavaScript objects
-      }
+//     }
+//      post = async (url = '', data = {}) => {
+//         // Default options are marked with *
+//         const response = await fetch(url, {
+//           method: 'POST', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify(data) // body data type must match "Content-Type" header
+//         });
+//         return await response.json(); // parses JSON response into native JavaScript objects
+//       }
 
-      put = async (url = '', data = {}) => {
-        // Default options are marked with *
-        const response = await fetch(url, {
-          method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-        return await response.json(); // parses JSON response into native JavaScript objects
-      }
+//       put = async (url = '', data = {}) => {
+//         // Default options are marked with *
+//         const response = await fetch(url, {
+//           method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+//           mode: 'cors', // no-cors, *cors, same-origin
+//           cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//           credentials: 'same-origin', // include, *same-origin, omit
+//           headers: {
+//             'Content-Type': 'application/json'
+//             // 'Content-Type': 'application/x-www-form-urlencoded',
+//           },
+//           redirect: 'follow', // manual, *follow, error
+//           referrerPolicy: 'no-referrer', // no-referrer, *client
+//           body: JSON.stringify(data) // body data type must match "Content-Type" header
+//         });
+//         return await response.json(); // parses JSON response into native JavaScript objects
+//       }
 
-}
-export let qcom = new Axios();
+// }
+// export let qcom = new Axios();
 export let MakeClass = (classOf,attributes,hold) => {
     return class classOf extends HTMLElement
     {
@@ -1155,7 +1155,8 @@ export let MakeClass = (classOf,attributes,hold) => {
             //         });
 
             // },false)
-        window.document.head.children[7].innerHTML = hold.class
+            console.log(window.document.head.querySelector('title').innerHTML = hold.class)
+
         }
         disconnectedCallback() {
             this.removeEventListener('click',this.onInput)
