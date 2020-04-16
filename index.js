@@ -394,7 +394,7 @@ export class State {
     _fallbackIdleCallback(callback) {
         return setTimeout(() => {
             const start = Date.now();
-            console.log("Using fallback");
+            // console.log("Using fallback");
             callback({
                 didTimeout: false,
                 timeRemaining: () => Math.max(0, 50 - (Date.now() - start))
@@ -463,7 +463,7 @@ export let level = (level,ele) =>{
         }
         return temp+'.getRootNode().host.'+ele
     }else{
-        console.log('daddy calling itself')
+        // console.log('daddy calling itself')
     }
 }
 // export let papa = (ele) =>{
@@ -530,7 +530,7 @@ export let docss = (...val) =>{
         const shadowRoot = val[0].attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = tocss(val[1])+val[2];
     }else{
-        console.log(val[0].shadowRoot)
+        // console.log(val[0].shadowRoot)
         val[0].shadowRoot.innerHTML = tocss(val[1])+val[2];
     }
 
@@ -1155,7 +1155,7 @@ export let MakeClass = (classOf,attributes,hold) => {
             //         });
 
             // },false)
-            console.log(window.document.head.querySelector('title').innerHTML = hold.class)
+            window.document.head.querySelector('title').innerHTML = hold.class
 
         }
         disconnectedCallback() {
@@ -1215,10 +1215,11 @@ export default class Qcom  {
                     let routeInfo = myFirstRouter.routes.filter((r)=>{
                         if(r.type == 'dynamic')
                         {
-
                             return route.startsWith(r.path.split('/:')[0])
                         }
                         else{
+                            // if(route == '/' || route == ""){}
+                            // console.log(r.path)
                             return r.path == route
                         }
                     })[0];
@@ -1227,7 +1228,7 @@ export default class Qcom  {
                                 window.history.pushState({},'',hold.router.error)
                                 view.innerHTML = hold.router.error
                             }else{
-                                window.history.pushState({},'','404')
+                                // window.history.pushState({},'','404')
                                 view.innerHTML = '404'
                                 }
                     }else{
@@ -1297,6 +1298,7 @@ export default class Qcom  {
 
                     if(currentPath == '/'){
                     let demo;
+                    console.log('root')
                     if(hold.router.root){
                         demo = $(hold.router.root)
                     }else{
@@ -1306,10 +1308,12 @@ export default class Qcom  {
                         // view.innerHTML = hold.router.root
                     }else{
 
+
                         let route = myFirstRouter.routes.filter(r=>{
                             if(r.type == 'dynamic'){
                                  return check(r.path.split('/'),currentPath.split('/')).response == "True"
                             }else{
+
                                 return r.path == currentPath
                             }
 
@@ -1321,6 +1325,7 @@ export default class Qcom  {
                                 view.innerHTML = `You are on the `+ route.name + ' Path With '+ check(route.path.split('/'),currentPath.split('/')).json[":id"]
 
                             }else{
+
                                 let demo = $(route.name)
                                 view.innerHTML = demo()
                             }
