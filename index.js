@@ -17,6 +17,27 @@
 
 // }
 // )
+// Array.prototype.forloop = function(val) {
+//     console.log(val())
+//     // var i;
+//     // for (i = 0; i < this.length; i++) {
+//     //   this[i] = this[i].name.toUpperCase();
+//     // }
+//   }
+var headtag = document.getElementsByTagName('HEAD')[0];
+//   console.log(headtag)
+
+  var linkone = document.createElement('link');
+  linkone.rel = 'stylesheet';
+  linkone.type = 'text/css';
+  linkone.href = './node_modules/@qcom.io/qcom/icons.css';
+  headtag.appendChild(linkone);
+
+  var linktwo = document.createElement('link');
+  linktwo.rel = 'stylesheet';
+  linktwo.type = 'text/css';
+  linktwo.href = './node_modules/@qcom.io/qcom/fonts.css';
+  headtag.appendChild(linktwo);
 
 window.onload = function () {
     document.addEventListener('input',async(e)=>{
@@ -35,6 +56,7 @@ window.onload = function () {
     this.document.addEventListener('click',async(e)=>{
         if(e.target.hasAttribute('call')){
             let store = camelCaseToDash(e.target.getAttribute('call').split('.')[0])
+            this.console.log(document.querySelector(store))
             let allMethods = document.querySelector(store).methods
             Object.keys(allMethods).forEach((item,index)=>{
                 if(e.target.getAttribute('call').split('.')[1].split('(')[0] == item){
@@ -338,6 +360,29 @@ export let color = {
     black:'#000000',
     white:'#ffffff',
 }
+export let random = (...val) =>{
+return val[Math.floor(Math.random() * val.length)]
+}
+
+export let random_keys = (...val) => random(...Object.keys(...val))
+export let random_values = (...val) => random(...Object.values(...val))
+export let import_module = async(val) => {
+    if(val.split('.').pop() == 'ts')
+    {
+        val = val.replace('.ts','.js')
+    }
+    return await import('../../../js/'+val)
+}
+
+class Theme{
+    constructor(){
+        this.background = color.white
+        this.color = color.black,
+        this.hover = color.grey
+    }
+}
+export let theme = new Theme()
+
 
 
 export class State {
@@ -516,8 +561,6 @@ export let makemycss = (val1) =>
         }
 
     }
-
-
     return val2;
 }
 export let tocss = (...val) =>{
@@ -525,7 +568,7 @@ export let tocss = (...val) =>{
 }
 
 export let docss = (...val) =>{
-    // console.log(val[1],val[2])
+    // console.log(val[1])
     if(val[0].shadowRoot == null){
         const shadowRoot = val[0].attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = tocss(val[1])+val[2];
@@ -588,10 +631,25 @@ export let makeMyFunction = (tag) =>
             {
 
                 if(isFunction(val[i])){
-                    temp += val[i]()
+                    let hold = val[i]()
+                    if(typeof hold == 'object'){
+                        hold.forEach(item=>{
+                            temp += item
+                        })
+
+                    }else{
+                        temp += hold
+                    }
+
                 }else{
-                    temp += val[i]
-                }
+                    if(typeof val[i] == 'undefined'){
+                        console.log(val[i])
+                        // eval(val[i])
+                    }
+                    else{
+                        temp += val[i]
+                    }
+                    }
             }
 
             if(typeof Object.values(val)[0] === 'object'){
@@ -609,6 +667,46 @@ export let makeMyFunction = (tag) =>
 
     }
 }
+
+export let key = (val)=>{
+    return '{{'+val+'}}'
+}
+// /**
+//  * Format double braced template string
+//  * @param {string} string
+//  * @param {string} find
+//  * @param {string} replace
+//  * @returns {string}
+//  */
+// export let findReplaceString = (string, find, replace) =>
+// {
+//     if ((/[a-zA-Z\_]+/g).test(string)) {
+//         return string.replace(new RegExp('\{\{(?:\\s+)?(' + find + ')(?:\\s+)?\}\}'), replace);
+//     } else {
+//         throw new Error("Find statement does not match regular expression: /[a-zA-Z\_]+/");
+//     }
+// }
+// console.log(findReplaceString('my {{name}} is mahesh','name','mahesh'))
+
+export let loop = (arg)=>{
+
+    let val = arg.data
+    let html = arg.html
+
+    let replacedata = (str,result) =>{
+    return str.replace(/{{(.+?)}}/g, (_,g1) => result[g1] || g1)
+    }
+    let temp = ''
+    for(let i in range(len(val))){
+
+        temp+=replacedata(html,val[i])
+    }
+
+    return temp
+}
+
+
+
 export let div = makeMyFunction('div')
 export let label = makeMyFunction('label')
 export let h1 = makeMyFunction('h1')
@@ -645,6 +743,7 @@ export let textarea = makeMyFunction('textarea')
 export let template = makeMyFunction('template')
 export let slot = makeMyFunction('slot')
 export let i = makeMyFunction('i')
+export let icon = (val) => i({class:'material-icons'},val)
 export let view = makeMyFunction('qcom-view')
 export let $ = (val) => {
     if(typeof val == 'object'){
@@ -794,6 +893,18 @@ export let list = (val) => [...val]
 //     }
 // })
 // eye.watch()
+
+
+// export let foreach = (val,html) =>{
+//     let temp = ''
+//     for(let i in range(len(val))){
+//         temp+= i
+//     }
+//     return temp
+//  }
+
+
+
 export class Eye{
     constructor(hold){
         this.on = hold.on
@@ -1166,12 +1277,19 @@ export let MakeClass = (classOf,attributes,hold) => {
         }
     }
 }
-export default class Qcom  {
+export class Qcom  {
             constructor(hold){
+
                 if(hold != undefined)
                 {
+                    if(hold.theme != undefined){
+                        theme.color = hold.theme.color
+                        theme.background = hold.theme.background
+                        theme.hover = hold.theme.hover
+                    }
                     if(hold.class == undefined){
                         hold.class = 'QcomApp'
+
                     }
                 if(hold.attributes){
                     this.attributes = hold.attributes
@@ -1467,7 +1585,7 @@ new Qcom ({
         }
     }
 })
-let justify = $("QcomJustify")
+export let justify = $("QcomJustify")
 
 
 
@@ -1479,7 +1597,7 @@ new Qcom ({
         this.style.float = 'right'
     }
 })
-let right = $("QcomRight")
+export let right = $("QcomRight")
 
 
 new Qcom ({
@@ -1488,7 +1606,7 @@ new Qcom ({
         this.style.textAlign = 'left'
     }
 })
-let left = $("QcomLeft")
+export let left = $("QcomLeft")
 
 
 new Qcom ({
@@ -1497,7 +1615,7 @@ new Qcom ({
         this.style.cursor = 'pointer'
     }
 })
-let pointer = $("QcomPointer")
+export let pointer = $("QcomPointer")
 
 
 
@@ -1547,7 +1665,7 @@ new Qcom ({
         }
     }
 })
-let qinput = $("QcomInput")
+export let qinput = $("QcomInput")
 
 
 style.sheet.insertRule(`
@@ -1604,7 +1722,7 @@ new Qcom ({
     }
 })
 
-let qtextarea = $('QcomTextarea')
+export let qtextarea = $('QcomTextarea')
 
 new Qcom ({
     class:"QcomPrimary",
@@ -1618,7 +1736,7 @@ new Qcom ({
         }}
     }
 })
-let primary = $("QcomPrimary")
+export let primary = $("QcomPrimary")
 
 new Qcom ({
     class:"QcomSuccess",
@@ -1634,7 +1752,7 @@ new Qcom ({
 
     }
 })
-let success = $("QcomSuccess")
+export let success = $("QcomSuccess")
 
 
 
@@ -1649,7 +1767,7 @@ new Qcom ({
 
     }
 })
-let uppercase = $("QcomUppercase")
+export let uppercase = $("QcomUppercase")
 
 
 
@@ -1663,7 +1781,7 @@ new Qcom ({
 
     }
 })
-let lowercase = $("QcomLowercase")
+export let lowercase = $("QcomLowercase")
 
 
 new Qcom ({
@@ -1676,7 +1794,7 @@ new Qcom ({
 
     }
 })
-let capitalize = $("QcomCapitalize")
+export let capitalize = $("QcomCapitalize")
 
 new Qcom ({
     class:"QcomInfo",
@@ -1692,7 +1810,7 @@ new Qcom ({
     }
     }
 })
-let info = $("QcomInfo")
+export let info = $("QcomInfo")
 
 new Qcom ({
     class:"QcomWarnning",
@@ -1708,7 +1826,7 @@ new Qcom ({
     }
     }
 })
-let warnning = $("QcomWarnning")
+export let warnning = $("QcomWarnning")
 
 new Qcom ({
     class:"QcomDanger",
@@ -1725,7 +1843,7 @@ new Qcom ({
     }
 })
 
-let danger = $("QcomDanger")
+export let danger = $("QcomDanger")
 
 new Qcom ({
     class:"QcomDark",
@@ -1746,7 +1864,7 @@ new Qcom ({
         }
     }
 })
-let dark = $("QcomDark")
+export let dark = $("QcomDark")
 
 new Qcom ({
     class:"QcomLight",
@@ -1762,9 +1880,9 @@ new Qcom ({
     }
     }
 })
-let light = $("QcomLight")
+export let light = $("QcomLight")
 
-let changetable = () =>
+export let changetable = () =>
 {
 
 
@@ -1955,7 +2073,7 @@ new Qcom ({
         this.html(div(slot()))
     }
 })
-let container = $("QcomContainer")
+export let container = $("QcomContainer")
 
 
 
@@ -1987,7 +2105,7 @@ new Qcom ({
 
     }
 })
-let card = $("QcomCard")
+export let card = $("QcomCard")
 
 
 new Qcom ({
@@ -2006,7 +2124,7 @@ new Qcom ({
 
     }
 })
-let row = $("QcomRow")
+export let row = $("QcomRow")
 
 new Qcom ({
     class:"QcomCol",
@@ -2032,8 +2150,10 @@ new Qcom ({
 
                 var sm = window.matchMedia("(max-width: 500px)")
                 sm.addListener(this.sm)
+
                 if(lg.matches == true){
-                    let sizeOfCol = 96 / hold.noOfCols
+                    let one = 96/12
+                    let sizeOfCol = one*this.getAttribute('lg')
                     this.style.position= 'relative';
                     // this.style.width= '100%';
                     this.style.paddingRight= '1%';
@@ -2051,13 +2171,14 @@ new Qcom ({
                 lg.addListener(this.lg)
 
                 if(md.matches == true){
-                    let sizeOfCol = 96 / hold.noOfCols
+                    let one = 96/12
+                    let sizeOfCol = one*this.getAttribute('md')
                     this.style.position= 'relative';
                     // this.style.width= '100%';
                     this.style.paddingRight= '1%';
                     this.style.paddingLeft= '1%';
-                    this.style.maxWidth= (sizeOfCol*2)+'%';
-                    this.style.flex = '0 0 '+(sizeOfCol*2)+'%'
+                    this.style.maxWidth= sizeOfCol+'%';
+                    this.style.flex = '0 0 '+sizeOfCol+'%'
                 }
             },
             sm:(sm)=>
@@ -2067,13 +2188,14 @@ new Qcom ({
                 var lg = window.matchMedia("(min-width: 768px)")
                 lg.addListener(this.lg)
                 if(sm.matches == true){
-                    let sizeOfCol = 96 / hold.noOfCols
+                    let one = 96/12
+                    let sizeOfCol = one*this.getAttribute('sm')
                     this.style.position= 'relative';
                     this.style.width= '100%';
                     this.style.paddingRight= '1%';
                     this.style.paddingLeft= '1%';
-                    this.style.maxWidth= (sizeOfCol*2)+'%';
-                    this.style.flex = '0 0 '+(sizeOfCol*2)+'%'
+                    this.style.maxWidth= sizeOfCol+'%';
+                    this.style.flex = '0 0 '+sizeOfCol+'%'
                 }
             }
         }
@@ -2081,7 +2203,7 @@ new Qcom ({
 
 
 })
-let col = $("QcomCol")
+export let col = $("QcomCol")
 
 // new Qcom({
 //     class:'QcomCard',
@@ -2102,10 +2224,10 @@ let col = $("QcomCol")
 
 new Qcom ({
     class:"QcomButton",
-    attributes:['qtype'],
+    attributes:['is'],
     created:()=>{
         {
-            if(this.getAttribute('qtype') == 'sm'){
+            if(this.getAttribute('is') == 'sm'){
                 this.design({
                 'div':{
                     padding: '.25rem .5rem',
@@ -2134,7 +2256,7 @@ new Qcom ({
                     transition: `box-shadow .35s`
                 }
             })}
-                else if(this.getAttribute('qtype') == 'md'){
+                else if(this.getAttribute('is') == 'md'){
                 this.design({
                 'div':{
                     padding: '.5rem 0.8rem',
@@ -2163,7 +2285,7 @@ new Qcom ({
                     transition: `box-shadow .35s`
                 }
             })
-            }else if(this.getAttribute('qtype') == 'lg'){
+            }else if(this.getAttribute('is') == 'lg'){
                 this.design({
                 'div':{
                     padding: '0.5rem 2rem',
@@ -2191,7 +2313,7 @@ new Qcom ({
                     boxShadow: `0px 0px 0px #fff,0px 0px 0px #bbb,-5px -5px 10px #fff inset,5px 5px 10px #bbb inset`,
                     transition: `box-shadow .35s`
                 }})
-            }else if(this.getAttribute('qtype') == 'block'){
+            }else if(this.getAttribute('is') == 'block'){
                 this.design({
                 'div':{
                     display: 'block',
@@ -2218,13 +2340,13 @@ new Qcom ({
                     boxShadow: `0px 0px 0px #fff,0px 0px 0px #bbb,-5px -5px 10px #fff inset,5px 5px 10px #bbb inset`,
                     transition: `box-shadow .35s`
                 }})
-            }else if(this.getAttribute('qtype') == 'link'){
+            }else if(this.getAttribute('is') == 'link'){
                 this.design({
                 'div':{
                     cursor:'pointer',
                     fontSize:'0.9em'
                 },'div:hover':{
-                    color:color.grey
+                    color:theme.hover
                 }})
             }
             this.html(div(slot()))
@@ -2235,7 +2357,7 @@ new Qcom ({
 
     }
 })
-let qbutton = $("QcomButton")
+export let btn = $("QcomButton")
 
 
 
@@ -2243,29 +2365,30 @@ let qbutton = $("QcomButton")
 
 $({
     class:'QcomAppBar',
-    css:{
-        'div':{
-            backgroundColor: '#FFF',
-            color: '#000',
-            maxHeight: '50px',
-            maxHeight: '50px',
-            fontSize:'1.4rem',
-            padding: '10px',
-            zIndex : '9999',
-            marginLeft:'-7px',
-            position: 'fixed',
-            top: 0,
-            width: '99%',
-            boxShadow: "0 2px 5px 0 rgba(0, 0, 0, 0.26)"
-        }
-    },
+
     created:()=>{
+        this.design(
+            {'div':{
+                backgroundColor: theme.background,
+                color: theme.color,
+                maxHeight: '50px',
+                maxHeight: '50px',
+                fontSize:'1.4rem',
+                padding: '10px',
+                zIndex : '9999',
+                marginLeft:'-7px',
+                position: 'fixed',
+                top: 0,
+                width: '99%',
+                boxShadow: "0 2px 5px 0 rgba(0, 0, 0, 0.26)"
+            }}
+        )
         this.html(div(this.getAttribute('title')+slot()))
     },
     attributes:['title','actions','background']
 })
 
-let appbar = $("QcomAppBar")
+export let appbar = $("QcomAppBar")
 
 
 // $({
@@ -2312,7 +2435,7 @@ $({
                 display: 'flex',
                 height: '50px',
                 boxShadow: '0 -2px 5px -2px #333',
-                backgroundColor: '#fff',
+                backgroundColor: theme.background,
                 justifyContent: 'space-between',
                 alignItems: 'center'
             },
@@ -2323,7 +2446,7 @@ $({
 },
 })
 
-let bottomNavigationBar = $("QcomBottomNavigationBar")
+export let bottomNavigationBar = $("QcomBottomNavigationBar")
 
 
 $({
@@ -2332,6 +2455,7 @@ $({
         this.design({
             'div':
                 {
+                    color: theme.color,
                     cursor:'pointer',
                     flexGrow: 1,
                     textAlign: 'center',
@@ -2351,12 +2475,12 @@ $({
         this.addEventListener('click',(e)=>{
             let store = this.parentElement.querySelectorAll('qcom-bottom-navigation-bar-item')
             store.forEach(item=>{
-                console.log(item.querySelector('i'))
-                console.log(e.target)
+                // console.log(item)
+                // console.log(e.target)
                 if(item == e.target){
-                    e.target.style.color = color.grey
+                    e.target.querySelector('i').style.color = theme.hover
                 }else{
-                    item.style.color = color.black
+                    item.querySelector('i').style.color = theme.color
                 }
                 // console.log(item)
                 // console.log(e.target)
@@ -2367,4 +2491,4 @@ $({
 },
 })
 
-let bottomNavigationBarItem = $("QcomBottomNavigationBarItem")
+export let bottomNavigationBarItem = $("QcomBottomNavigationBarItem")
