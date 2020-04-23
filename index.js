@@ -24,20 +24,116 @@
 //     //   this[i] = this[i].name.toUpperCase();
 //     // }
 //   }
-var headtag = document.getElementsByTagName('HEAD')[0];
+//   var headtag = document.getElementsByTagName('HEAD')[0];
 //   console.log(headtag)
 
-  var linkone = document.createElement('link');
-  linkone.rel = 'stylesheet';
-  linkone.type = 'text/css';
-  linkone.href = './node_modules/@qcom.io/qcom/icons.css';
-  headtag.appendChild(linkone);
+//   var linkone = document.createElement('link');
+//   linkone.rel = 'stylesheet';
+//   linkone.type = 'text/css';
+//   linkone.href = './node_modules/@qcom.io/qcom/icons.css';
+//   headtag.appendChild(linkone);
 
-  var linktwo = document.createElement('link');
-  linktwo.rel = 'stylesheet';
-  linktwo.type = 'text/css';
-  linktwo.href = './node_modules/@qcom.io/qcom/fonts.css';
-  headtag.appendChild(linktwo);
+//   var linktwo = document.createElement('link');
+//   linktwo.rel = 'stylesheet';
+//   linktwo.type = 'text/css';
+//   linktwo.href = './node_modules/@qcom.io/qcom/fonts.css';
+//   headtag.appendChild(linktwo);
+// function qisRegistered(name) {
+//     return document.createElement(name).constructor.__proto__ !== window.HTMLElement;
+//   }
+
+//   var allElems = document.querySelectorAll('html /deep/ *');
+//   var nodeNames = [].map.call(allElems, el => el.nodeName.toLowerCase())
+//                       .filter((value, index, self) => self.indexOf(value) === index)
+
+//   console.log('all elements', nodeNames);
+//   console.log('registered, custom elements', nodeNames.filter(qisRegistered))
+
+// export let attach = (val) =>{
+//     let store = (camelCaseToDash(val.split('.')[0]).replace('"',''))
+//     let ele = document.querySelector(store)
+//     console.log(val.substring(len(val.split('.')[0])))
+//     console.log(len(val.split('.')[0]))
+//     for(let i in range(len(Object.keys(ele.methods)))){
+//         if(Object.keys(ele.methods)[i] == val.split('.')[1].replace('"','').split('(')[0]){
+//             let fun = val.split('.')[1].replace('"','')
+//             return 'eval(document.querySelector("'+store+'").methods.'+val.split('.')[1].replace('"','')+')'
+
+//         }
+//     }
+export let rev = (str) => {
+    // Step 1. Use the split() method to return a new array
+    var splitString = str.split(""); // var splitString = "hello".split("");
+    // ["h", "e", "l", "l", "o"]
+
+    // Step 2. Use the reverse() method to reverse the new created array
+    var reverseArray = splitString.reverse(); // var reverseArray = ["h", "e", "l", "l", "o"].reverse();
+    // ["o", "l", "l", "e", "h"]
+
+    // Step 3. Use the join() method to join all elements of the array into a string
+    var joinArray = reverseArray.join(""); // var joinArray = ["o", "l", "l", "e", "h"].join("");
+    // "olleh"
+
+    //Step 4. Return the reversed string
+    return joinArray; // "olleh"
+}
+export let attach = (val) =>{
+    val = JSON.parse(val)
+    val = val.includes("'") == true ? val.replace(/'/g,'\"'):val
+    let store = (camelCaseToDash(val.split('.')[0]))
+    let ele = document.querySelector(store)
+    for(let i in range(len(Object.keys(ele.methods)))){
+        if(Object.keys(ele.methods)[i] == val.split('.')[1].split('(')[0]){
+            return '(document.querySelector("'+store+'").methods'+val.substring(len(val.split('.')[0]))+')'
+
+        }
+    }
+// export let attach = (val) =>{
+//     let store = (camelCaseToDash(val.split('.')[0]).replace('"',''))
+//     console.log(JSON.parse(val))
+//     let ele = document.querySelector(store)
+//     // console.log(val.substring(len(val.split('.')[0])).replace('"',''))
+//     // console.log(val.split('.')[1].replace('"',''))
+//     // let _remaining = val.substring(len(val.split('.')[0])).replace('"','')
+//     for(let i in range(len(Object.keys(ele.methods)))){
+//         if(Object.keys(ele.methods)[i] == val.split('.')[1].replace('"','').split('(')[0]){
+//             let fun = val.split('.')[1].replace('"','')
+//             return 'eval(document.querySelector("'+store+'").methods.'+val.split('.')[1].replace('"','')+')'
+
+//         }
+//     }
+//if you get problem then uncomment this oen
+    //   return 'this.getRootNode().host.methods.'+val.split('.')[1].replace('"','')
+
+
+// return 'this.getRootNode().host.methods.'+val.replace('"','').replace('"','')
+
+}
+export let ok = (val) =>{
+return JSON.stringify(val)
+}
+export let call = (val) =>{
+    return attach(ok(val))
+}
+//   export let call = (val1,val2) =>{
+
+//     //   console.log(val1.methods,val2)
+//       for(let i in range(len(Object.keys(val1.methods)))){
+//           if(Object.keys(val1.methods)[i] == val2.split('(')[0]){
+//             return String(Object.keys(val1.methods)[i])+'('+String(val2.split('(')[1])
+//             //   return val2
+//           }
+//       }
+//       return false
+//     // return JSON.stringify(val1)
+//   }
+  export let isRegistered = (name) => {
+    return document.createElement(name).constructor !== HTMLElement;
+  }
+  export let go = (...val) =>{
+    //   console.log(val)
+console.log(val[0])    // return 1
+  }
 
 window.onload = function () {
     document.addEventListener('input',async(e)=>{
@@ -54,9 +150,10 @@ window.onload = function () {
     },false)
 
     this.document.addEventListener('click',async(e)=>{
+        // this.console.log(e.target.innerHTML == '')
         if(e.target.hasAttribute('call')){
             let store = camelCaseToDash(e.target.getAttribute('call').split('.')[0])
-            this.console.log(document.querySelector(store))
+            // this.console.log(document.querySelector(store))
             let allMethods = document.querySelector(store).methods
             Object.keys(allMethods).forEach((item,index)=>{
                 if(e.target.getAttribute('call').split('.')[1].split('(')[0] == item){
@@ -65,9 +162,40 @@ window.onload = function () {
             })
 
         }
+        else if(e.target.innerHTML == ''){
+
+            if(e.target.shadowRoot.mode == 'open'){
+            // let hold = e.target.shadowRoot.querySelectorAll('[call]')
+            // for(let i in range(hold.length)){
+            //     this.console.log(hold[i])
+            // }
+            if(e.target.shadowRoot.querySelector('[call]') != null)
+            {let store = camelCaseToDash(e.target.shadowRoot.querySelector('[call]').getAttribute('call').split('.')[0])
+            // this.console.log(document.querySelector(store))
+            let allMethods = document.querySelector(store).methods
+            Object.keys(allMethods).forEach((item,index)=>{
+                if(e.target.shadowRoot.querySelector('[call]').getAttribute('call').split('.')[1].split('(')[0] == item){
+                    Object.values(allMethods)[index]()
+                }
+            })}}
+
+        }
     })
  }
 
+// export let checkHost = (val) =>{
+//     var all = document.getElementsByTagName('*');
+//     for (var i=0, max=all.length; i < max; i++) {
+//             if(all[i].childElementCount > 0){
+//                 // checkHost(val)
+//             }else{
+//                 // console.log('ok')
+//                 console.log(all[i].host.class)
+//             }
+//     }
+//     // return val
+// }
+// checkHost('QcomHome')
 
 export let color = {
     red_lighten_5:'#ffebee',
@@ -1220,9 +1348,16 @@ export let MakeClass = (classOf,attributes,hold) => {
             this.addEventListener('click',async(e)=>{
                         if(e.target.getAttribute('click') != null){
                         try{
-                            eval(e.target.getAttribute('click'))
+                            if(e.target.getAttribute('click').split('.')[0]==hold.class){
+                                // console.log('this.'+e.target.getAttribute('click').split('.')[1])
+                               eval('this.'+e.target.getAttribute('click').split('.')[1])
+
+                            }
+                            // eval(e.target.getAttribute('click'))
                         }catch(err) {
                         }
+                    }else{
+                        // console.log(e.target.shadowRoot.innerHTML)
                     }
                 },false)
 
@@ -1232,7 +1367,9 @@ export let MakeClass = (classOf,attributes,hold) => {
             this.css = val
         }
         html(...val){
-
+            // if(this.css == undefined){
+            //     this.css = {}
+            // }
             if(val.length == 1){
                 if(this.css){
                     docss(this,this.css,val)
@@ -1266,7 +1403,15 @@ export let MakeClass = (classOf,attributes,hold) => {
             //         });
 
             // },false)
-            window.document.head.querySelector('title').innerHTML = hold.class
+            if(window.document.head.querySelector('title') == null)
+            {
+                let _title = document.createElement('title')
+                document.head.appendChild(_title)
+                window.document.head.querySelector('title').innerHTML = hold.class
+            }else{
+                window.document.head.querySelector('title').innerHTML = hold.class
+            }
+
 
         }
         disconnectedCallback() {
@@ -1276,6 +1421,7 @@ export let MakeClass = (classOf,attributes,hold) => {
             return attributes;
         }
     }
+
 }
 export class Qcom  {
             constructor(hold){
@@ -1416,7 +1562,7 @@ export class Qcom  {
 
                     if(currentPath == '/'){
                     let demo;
-                    console.log('root')
+                    // console.log('root')
                     if(hold.router.root){
                         demo = $(hold.router.root)
                     }else{
@@ -1666,7 +1812,15 @@ new Qcom ({
     }
 })
 export let qinput = $("QcomInput")
-
+export let globalcss = (val)  =>{
+    style.sheet.insertRule(makemycss(val))
+}
+// globalcss({
+//     '*':{
+//         margin:0,
+//         padding:0
+//     }
+// })
 
 style.sheet.insertRule(`
 qcom-textarea{
@@ -2492,3 +2646,128 @@ $({
 })
 
 export let bottomNavigationBarItem = $("QcomBottomNavigationBarItem")
+
+
+
+$({
+    class:'QcomEmoji',
+    created:()=>{
+        this.design({span:{fontSize: '1.2em'}})
+        this.html(span(slot()))
+    }
+})
+export let emoji = $('QcomEmoji')
+
+/**
+ * Codes of emojis
+ */
+// https://emojipedia.org/people/
+export let of = {
+    /** &#128512 */
+    grinning_face:'&#128512',
+    /** &#128515 */
+    grinning_face_with_big_eyes:'&#128515;',
+    /** &#128516 */
+    grinning_face_with_smiling_eyes:'&#128516;',
+    /** &#128513 */
+    beaming_face_with_smiling_eyes:'&#128513;',
+    /** &#128518 */
+    grinning_squinting_face:'&#128518;',
+    /** &#128517 */
+    grinning_face_with_sweat:'&#128517;',
+    /** &#129315 */
+    rolling_on_the_floor_laughing:'&#129315;',
+    /** &#128514 */
+    face_with_tears_of_joy:'&#128514;',
+    /** &#128578 */
+    slightly_smiling_face:'&#128578;',
+    /** &#128579 */
+    upside_down_face:'&#128579;',
+    /** &#128521 */
+    winking_face:'&#128521;',
+    /** &#128522 */
+    smiling_face_with_smiling_eyes:'&#128522;',
+    /** &#128519 */
+    smiling_face_with_halo:'&#128519;',
+    /** 🥰 */
+    smiling_face_with_hearts:'🥰',
+    /** 😍 &#128525 */
+    smiling_face_with_heart_eyes:'&#128525;',
+    /** 🤩 */
+    star_struck:'🤩',
+    /** 😘 &#128536 */
+    face_blowing_a_kiss:'&#128536;',
+    /** 😗 &#128535 */
+    kissing_face:'&#128535;',
+    /** ☺ */
+    smiling_face:'☺',
+    /** 😚 &#128538 */
+    kissing_face_with_closed_eyes:'&#128538;',
+    /** 😙 &#128537 */
+    kissing_face_with_smiling_eyes:'&#128537;',
+    /** 😋 */
+    face_savoring_food:'😋',
+    /** 😛 &#128539 */
+    face_with_tongue:'&#128539;',
+    /** 😜 &#128540 */
+    winking_face_with_tongue:'&#128540;',
+    /** 🤪 */
+    zany_face:'🤪',
+    /** 😝 &#128541 */
+    squinting_face_with_tongue:'&#128541;',
+    /** 🤑 */
+    money_mouth_face:'🤑',
+    /** 🤗 */
+    hugging_face:'🤗',
+    zany_face:'🤪',
+    /** 🤭 &#129325 */
+    face_with_hand_over_mouth:'&#129325;',
+    /** 🤫 Decimal - &#129323 Hexa - &#x1F92B; URL- %F0%9F%A4%AB */
+    shushing_face:'&#129323;',
+    /** 🤔 Decimal - &#129300 Hexa - &#x1F914; */
+    thinking_face:'&#129300;',
+    /** 🤐 Decimal - &#129296 Hexa - &#x1F910; */
+    zipper_mouth_face:'&#129296;',
+    /** 🤨  */
+    face_with_raised_eyebrow:'🤨',
+    /** 😐 Decimal - &#128528 Hexa - &#x1F610; */
+    neutral_face:'&#128528;',
+    /** 😑 Decimal - &#128529 Hexa - &#x11F611; */
+    expressionless_face:'&#128529;',
+    /** 😶 Decimal - &#128566 Hexa - &#x1F636; */
+    face_without_mouth:'&#128566;',
+    /** 😏 Decimal - &#128527 Hexa - &#x1F60F; */
+    smirking_face:'&#128527;',
+    /** 😒 Decimal - &#128530 Hexa - &#x1F612; */
+    unamused_face:'&#128530;',
+    /** 🙄 */
+    face_with_rolling_eyes:'🙄',
+    /** 😬 Decimal - &#128556 Hexa - &#x1F62C; */
+    grimacing_face:'&#128556;',
+    /** 🤥 */
+    lying_face:'🤥',
+    /** 😌 Decimal - &#128524 Hexa - &#x1F60C; */
+    relieved_face:'&#128524;',
+    /** 😔 Decimal - &#128532 Hexa - &#x1F614; */
+    pensive_face:'&#128532;',
+    /** 😪 Decimal - &#128554 Hexa - &#x1F62A; */
+    sleepy_face:'&#128554;',
+    /** 🤤 Decimal - &#129316 Hexa - &#x1F924; */
+    drooling_face:'&#129316;',
+    /** 😴 Decimal - &#128564 Hexa - &#x1F634; */
+    sleeping_face:'&#128564;',
+    /** 😷 Decimal - &#128567 Hexa - &#x1F637; */
+    face_with_medical_mask:'&#128567;',
+    /** 🤒 */
+    face_with_thermometer:'🤒',
+    /** 🤕 Decimal - &#129301 Hexa - &#x1F915; */
+    face_with_head_bandage:'&#129301;',
+    /** 🤢 Decimal - &#129314 Hexa - &#x1F922; */
+    nauseated_face:'&#129314;',
+    /** 🤮 Decimal - &#129326 Hexa - &#x1F92E; */
+    face_vomiting:'&#129326;',
+    /** 🤧 Decimal - &#129319 Hexa - &#x1F927; */
+    sneezing_face:'&#129319;',
+    /** 🥵 */
+    hot_face:'🥵',
+}
