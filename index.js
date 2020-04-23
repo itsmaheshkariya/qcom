@@ -1322,9 +1322,9 @@ export let MakeClass = (classOf,attributes,hold) => {
             if(hold.class){
                 this.class = hold.class;
             }
-            if(hold.css){
-                this.css = hold.css
-            }
+            // if(hold.css){
+            //     this.css = hold.css
+            // }
             if(hold.methods){
                 this.methods = hold.methods;
                 for(let i = 0;i<Object.keys(this.methods).length;i++){
@@ -1348,6 +1348,9 @@ export let MakeClass = (classOf,attributes,hold) => {
             this.addEventListener('click',async(e)=>{
                         if(e.target.getAttribute('click') != null){
                         try{
+                            // if(e.target.getAttribute('click').split('.')[0] == 'this'){
+                            //     console.log(this)
+                            // }
                             if(e.target.getAttribute('click').split('.')[0]==hold.class){
                                 // console.log('this.'+e.target.getAttribute('click').split('.')[1])
                                eval('this.'+e.target.getAttribute('click').split('.')[1])
@@ -1374,7 +1377,12 @@ export let MakeClass = (classOf,attributes,hold) => {
                 if(this.css){
                     docss(this,this.css,val)
                 }else{
-                    this.innerHTML = val
+                    if(hold.css){
+                        this.innerHTML = tocss(hold.css)+val
+                    }else{
+                        this.innerHTML = val
+                    }
+
                 }
 
         }
