@@ -871,6 +871,12 @@ export let slot = makeMyFunction('slot')
 export let i = makeMyFunction('i')
 export let icon = (val) => i({class:'material-icons'},val)
 export let view = makeMyFunction('qcom-view')
+// export default $ = (val) => {
+//     if(typeof val == 'object'){
+//         new Qcom(val)
+//     }else {
+//     return makeMyFunction(camelCaseToDash(val))}
+// }
 export let $ = (val) => {
     if(typeof val == 'object'){
         new Qcom(val)
@@ -1314,11 +1320,24 @@ export let MakeClass = (classOf,attributes,hold) => {
             super()
             if(hold.data){
                 this.data = hold.data;
+
+                this.update = new Proxy(this.data, {
+                    set: function (target, key, value) {
+                        console.log(`${key} set to ${value}`);
+                        target[key] = value;
+                        return true;
+                    }
+                });
+
             }
+
             if(hold.el){
                 this.el = hold.el;
             }
             if(hold.class){
+                this.class = hold.class;
+            }else if(hold.name){
+                hold.class = hold.name
                 this.class = hold.class;
             }
             // if(hold.css){
@@ -1329,20 +1348,29 @@ export let MakeClass = (classOf,attributes,hold) => {
                 for(let i = 0;i<Object.keys(this.methods).length;i++){
                     eval('this.'+Object.keys(this.methods)[i]+'='+Object.values(this.methods)[i]+'')
                 }
+            }else if(hold.code){
+                this.methods = hold.code;
+                for(let i = 0;i<Object.keys(this.methods).length;i++){
+                    eval('this.'+Object.keys(this.methods)[i]+'='+Object.values(this.methods)[i]+'')
+                }
             }
-            if(hold.newhtml){
-                this.newhtml = hold.newhtml
-            }
+            // if(hold.newhtml){
+            //     this.newhtml = hold.newhtml
+            // }
             if(hold.created){
                 this.created = hold.created;
                 eval('('+this.created+')()');
 
+
                 //
             }else{
-                if(hold.class == 'QcomApp'){
+                if(hold.class == 'QcomApp' || hold.name == 'QcomApp'){
                     this.html($('QcomLayout')())
+                }else{
+                    eval('this.updater()')
                 }
             }
+
 
             this.addEventListener('click',async(e)=>{
                         if(e.target.getAttribute('click') != null){
@@ -1390,6 +1418,7 @@ export let MakeClass = (classOf,attributes,hold) => {
 
         }
         }
+
         state(val){
             this._app = new State(val)
         }
@@ -1444,7 +1473,7 @@ export class Qcom  {
                         theme.background = hold.theme.background
                         theme.hover = hold.theme.hover
                     }
-                    if(hold.class == undefined){
+                    if(hold.class == undefined && hold.name == undefined){
                         hold.class = 'QcomApp'
 
                     }
@@ -1452,6 +1481,9 @@ export class Qcom  {
                     this.attributes = hold.attributes
                 }else{
                     this.attributes = []
+                }
+                if(hold.name){
+                    hold.class = hold.name
                 }
                 if(hold.class){
                     let C1 = MakeClass(this.class,this.attributes,hold)

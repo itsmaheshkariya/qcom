@@ -6,18 +6,17 @@
 
 ```npm install @qcom.io/qcom```
 
-#### Or (Add script to head tag)
+#### Or (Use following code to your html file)
 
-```<script src="https://unpkg.com/@qcom.io/qcom@1.0.8" type="module"></script>```
 
 #### index.html (Hello World)
 ```
 <qcom-hello-world></qcom-hello-world>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@1.0.8/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@1.0.9/index.js'
   $({
-      class:'QcomHelloWorld',
+      name:'QcomHelloWorld',
       created:()=>{
           this.html(h1('Hello World'))
       }
@@ -30,17 +29,16 @@
 <qcom-demo></qcom-demo>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@1.0.8/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@1.0.9/index.js'
   $({
-      class:'QcomDemo',
-      created:()=>{
-          this.html(
-              div(
-                  h1({click:'QcomDemo.log()'},'Click Here')
-              )
-          )
-      },
+      name:'QcomDemo',
       methods:{
+          updater:()=>{
+              this.html(
+                div(
+                  h1({click:'QcomDemo.log()'},'Click Here')
+                ))
+          },
           log:()=>{
               alert('clicked')      
           }
@@ -50,39 +48,31 @@
 ```
 
 
-#### index.html (State Management)
+#### index.html (Data Management)
 ```
 <qcom-demo></qcom-demo>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@1.0.8/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@1.0.9/index.js'
   $({
-      class:'QcomDemo',
-      created:()=>{
-          this.state(data=>{this.html(
-              div(
-                  h1(data.counter),
-                  btn({is:'md',click:'QcomDemo.add()'},'+'),
-                  btn({is:'md',click:'QcomDemo.sub()'},'-')
-              )
-          )})
-  
-        this.setState(prev_data=>({
+      name:'QcomDemo',
+      data:{
           counter:0
-        }))
-
       },
-      methods:{
-          add:()=>{
-             this.setState(prev_data=>({
-              counter:prev_data.counter + 1
-            }))    
-          },
-        sub:()=>{
-             this.setState(prev_data=>({
-              counter:prev_data.counter - 1
-            }))    
-          }
+      code:{
+            updater:()=>{
+                this.html(div(
+                    h1(this.data.counter),
+                    btn({is:'md',click:'QcomDemo.add()'},'+'),
+                    btn({is:'md',click:'QcomDemo.sub()'},'-')
+                ))
+            },
+            add:()=>{
+                this.update.counter = this.data.counter + 1 
+            },
+            sub:()=>{
+                    this.update.counter = this.data.counter - 1
+            }
       }
   })
 </script>
