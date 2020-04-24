@@ -24,14 +24,12 @@
 //     //   this[i] = this[i].name.toUpperCase();
 //     // }
 //   }
-//   var headtag = document.getElementsByTagName('HEAD')[0];
-//   console.log(headtag)
-
-//   var linkone = document.createElement('link');
-//   linkone.rel = 'stylesheet';
-//   linkone.type = 'text/css';
-//   linkone.href = './node_modules/@qcom.io/qcom/icons.css';
-//   headtag.appendChild(linkone);
+// var headtag = document.getElementsByTagName('HEAD')[0];
+// var linkone = document.createElement('link');
+// linkone.rel = 'stylesheet';
+// linkone.type = 'text/css';
+// linkone.href = 'https://unpkg.com/@qcom.io/qcom@1.0.7/icons.css';
+// headtag.appendChild(linkone);
 
 //   var linktwo = document.createElement('link');
 //   linktwo.rel = 'stylesheet';
@@ -61,6 +59,7 @@
 
 //         }
 //     }
+
 export let rev = (str) => {
     // Step 1. Use the split() method to return a new array
     var splitString = str.split(""); // var splitString = "hello".split("");
@@ -713,10 +712,10 @@ export let recursiveLoop1 = (val1) =>
     let val2 = ``;
     for(let i = 0;i<Object.keys(val1).length;i++){
         if(typeof Object.values(val1)[i] === 'object'){
-            let hold = recursiveLoop(Object.values(val1)[i])
-            val2 += ` `+camelCaseToDash(Object.keys(val1)[i])+`:`+hold+` `
+            let hold = recursiveLoop1(Object.values(val1)[i])
+            val2 += ``+camelCaseToDash(Object.keys(val1)[i])+`:`+hold+` `
         }else{
-            val2 += ` `+camelCaseToDash(Object.keys(val1)[i])+`:`+Object.values(val1)[i]+` `
+            val2 += ``+camelCaseToDash(Object.keys(val1)[i])+`:`+Object.values(val1)[i]+`;`
         }
     }
     return val2;
@@ -726,10 +725,9 @@ export let recursiveLoop = (val1) =>
 {
     let val2 = ``;
     for(let i = 0;i<Object.keys(val1).length;i++){
-        //console.log(Object.values(val1)[i])
         if(typeof Object.values(val1)[i] === 'object'){
             let hold = recursiveLoop1(Object.values(val1)[i])
-            val2 += ` `+camelCaseToDash(Object.keys(val1)[i])+`=`+hold+` `
+            val2 += ` `+camelCaseToDash(Object.keys(val1)[i])+`="`+hold+`" `
         }else{
             val2 += ` `+camelCaseToDash(Object.keys(val1)[i])+`='`+Object.values(val1)[i]+`' `
         }
@@ -983,6 +981,7 @@ export let br = (val) => {
 // }
 
 export let getid = (val) => document.getElementById(val)
+export let child = (val) => document.querySelector(val)
 export let print = (val) => console.log(val)
 export let len = (val) => val.length
 export let range = (...val) => {
@@ -1368,6 +1367,10 @@ export let MakeClass = (classOf,attributes,hold) => {
 
         design(val){
             this.css = val
+        }
+        child(val){
+            return this.querySelector(camelCaseToDash(val.split('.')[0]))
+
         }
         html(...val){
             // if(this.css == undefined){
@@ -2272,15 +2275,20 @@ export let card = $("QcomCard")
 
 new Qcom ({
     class:"QcomRow",
-    css:{
-       'div':{ display: '-ms-flexbox',
-        display: 'flex',
-        msFlexWrap: 'wrap',
-        flexWrap: 'wrap',
-        boxSizing: 'border-box'}
-    },
+    // css:{
+    //    'div':{ display: '-ms-flexbox',
+    //     display: 'flex',
+    //     msFlexWrap: 'wrap',
+    //     flexWrap: 'wrap',
+    //     boxSizing: 'border-box'}
+    // },
     created:()=>{
         {
+            this.design({'div':{ display: '-ms-flexbox',
+            display: 'flex',
+            msFlexWrap: 'wrap',
+            flexWrap: 'wrap',
+            boxSizing: 'border-box'}})
             this.html(div(slot()))
         }
 
@@ -2290,10 +2298,10 @@ export let row = $("QcomRow")
 
 new Qcom ({
     class:"QcomCol",
-    noOfCols:0,
+    // noOfCols:0,
     created:()=>
         {
-                hold.noOfCols = this.parentElement.childElementCount
+                // hold.noOfCols = this.parentElement.childElementCount
                 if(window.matchMedia("(min-width: 768px)").matches == true){
                     this.lg(window.matchMedia("(min-width: 768px)"))
                 }
