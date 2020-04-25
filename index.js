@@ -831,7 +831,9 @@ export let loop = (arg)=>{
     return temp
 }
 
-
+// export let when = (args) => {
+//     return args
+// }
 
 export let div = makeMyFunction('div')
 export let label = makeMyFunction('label')
@@ -877,11 +879,128 @@ export let view = makeMyFunction('qcom-view')
 //     }else {
 //     return makeMyFunction(camelCaseToDash(val))}
 // }
+export let when = (()=>{
+    'use strict'
+    var Constructor = function(query){
+        if (!query) return;
+        if(query){
+            this.query = query
+        }
+    }
+	/**
+	 * Run a callback on then result
+	 * @param  {Function} callback The callback function to run
+	 */
+	Constructor.prototype.then = function (callback) {
+		// if (!callback || typeof callback !== 'function') return;
+		// for (var i = 0; i < this.length; i++) {
+		// 	callback(this.elems[i], i);
+        // }
+        return this.query == true ? callback() : false ;
+
+    };
+    // /**
+	//  * Run a callback on or result
+	//  * @param  {Function} callback The callback function to run
+	//  */
+	// Constructor.prototype.or = function (callback) {
+	// 	if (!callback || typeof callback !== 'function') return;
+    //     return callback(this);
+
+	// };
+    /**
+	 * Instantiate a new constructor
+	 */
+	var instantiate = function (selector) {
+		return new Constructor(selector);
+	};
+
+	/**
+	 * Return the constructor instantiation
+	 */
+	return instantiate;
+
+})();
+export var find = (function () {
+
+	'use strict';
+
+	/**
+	 * Create the constructor
+	 * @param {String} selector The selector to use
+	 */
+	var Constructor = function (selector) {
+		if (!selector) return;
+		if (selector === 'document') {
+			this.elems = [document];
+		} else if (selector === 'window') {
+			this.elems = [window];
+		} else {
+			this.elems = document.querySelectorAll(selector);
+		}
+	};
+
+	/**
+	 * Do ajax stuff
+	 * @param  {String} url The URL to get
+	 */
+	Constructor.prototype.ajax = function (url) {
+		// Do some XHR/Fetch thing here
+		console.log(url);
+	};
+
+	/**
+	 * Run a callback on each item
+	 * @param  {Function} callback The callback function to run
+	 */
+	Constructor.prototype.each = function (callback) {
+		if (!callback || typeof callback !== 'function') return;
+		for (var i = 0; i < this.elems.length; i++) {
+			callback(this.elems[i], i);
+		}
+		return this;
+	};
+
+	/**
+	 * Add a class to elements
+	 * @param {String} className The class name
+	 */
+	Constructor.prototype.addClass = function (className) {
+		this.each(function (item) {
+			item.classList.add(className);
+		});
+		return this;
+	};
+
+	/**
+	 * Remove a class to elements
+	 * @param {String} className The class name
+	 */
+	Constructor.prototype.removeClass = function (className) {
+		this.each(function (item) {
+			item.classList.remove(className);
+		});
+		return this;
+	};
+
+	/**
+	 * Instantiate a new constructor
+	 */
+	var instantiate = function (selector) {
+		return new Constructor(selector);
+	};
+
+	/**
+	 * Return the constructor instantiation
+	 */
+	return instantiate;
+
+})();
+
+
 export let $ = (val) => {
-    if(typeof val == 'object'){
-        new Qcom(val)
-    }else {
-    return makeMyFunction(camelCaseToDash(val))}
+
+    if(typeof val == 'object'){new Qcom(val)}else {return makeMyFunction(camelCaseToDash(val))}
 }
 export let $router = (val) =>{
     $({
@@ -1323,12 +1442,15 @@ export let MakeClass = (classOf,attributes,hold) => {
 
                 this.update = new Proxy(this.data, {
                     set: function (target, key, value) {
-                        console.log(`${key} set to ${value}`);
+                        // console.log(`${key} set to ${value}`);
                         target[key] = value;
                         return true;
                     }
                 });
 
+            }
+            if(hold.globalcss){
+                globalcss(hold.globalcss)
             }
 
             if(hold.el){
@@ -1391,8 +1513,17 @@ export let MakeClass = (classOf,attributes,hold) => {
                     }
                 },false)
 
-        }
 
+        }
+        // _replacedata(str,result){
+        //     return str.replace(/{{(.+?)}}/g, (_,g1) => result[g1] || g1)
+        //     }
+        //     // if you ever face problem with updater uncomment following method
+        // updater(){
+
+        //     // console.log(hold.template())
+        //     this.html(this._replacedata(this.template,this.data))
+        // }
         design(val){
             this.css = val
         }
@@ -1407,7 +1538,10 @@ export let MakeClass = (classOf,attributes,hold) => {
             if(val.length == 1){
                 if(this.css){
                     docss(this,this.css,val)
-                }else{
+                }else if(hold.type == 'shadow'){
+                    docss(this,hold.css,val)
+                }
+                else{
                     if(hold.css){
                         this.innerHTML = tocss(hold.css)+val
                     }else{
@@ -1484,6 +1618,9 @@ export class Qcom  {
                 }
                 if(hold.name){
                     hold.class = hold.name
+                }
+                if(hold.template){
+                    this.template = hold.template
                 }
                 if(hold.class){
                     let C1 = MakeClass(this.class,this.attributes,hold)
@@ -1856,12 +1993,20 @@ new Qcom ({
 })
 export let qinput = $("QcomInput")
 export let globalcss = (val)  =>{
-    style.sheet.insertRule(makemycss(val))
+    for(let i in range(len(Object.keys(val)))){
+        let _store_1 = '{"'+String(Object.keys(val)[i]+'":'+JSON.stringify(Object.values(val)[i]))+'}'
+        _store_1 = JSON.parse(_store_1)
+        style.sheet.insertRule(makemycss(_store_1))
+    }
+    // style.sheet.insertRule(makemycss(val))
 }
 // globalcss({
 //     '*':{
 //         margin:0,
 //         padding:0
+//     },
+//     '.h2':{
+//         border:'10px solid black'
 //     }
 // })
 
@@ -1906,7 +2051,7 @@ new Qcom ({
             if(this.data.firstclick == 0){
             this.innerText = ''
             this.data.firstclick = 1
-            }
+    }
         }))
         this.addEventListener('mouseleave',(()=>{
             // console.log('ok')

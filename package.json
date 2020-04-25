@@ -1,21 +1,21 @@
 {
   "name": "@qcom.io/qcom",
-  "version": "1.0.9",
-  "description": "A Brand new JS Framework for creating Custom web components with Dynamic HTML generator functions No more HTML tags and css styling.",
+  "version": "1.0.10",
+  "description": "A Brand new JS Framework for creating Custom web components with Dynamic HTML generator functions. No more HTML tags and css styling required.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
+    "@qcom.io/qcom-cli",
     "framework",
     "library",
     "js",
     "es6",
     "es2020",
-    "qcom.io",
     "qcom"
   ],
-  "author": "Mahesh Kariya",
+  "author": "Mahesh Dipakbhai Kariya",
   "license": "MIT",
   "repository": {
     "type": "git",
