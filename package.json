@@ -1,6 +1,6 @@
 {
   "name": "@qcom.io/qcom",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A Brand new JS Framework for creating Custom web components with Dynamic HTML generator functions. No more HTML tags and css styling required.",
   "main": "index.js",
   "scripts": {

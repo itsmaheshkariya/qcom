@@ -26,7 +26,7 @@ npm install @qcom.io/qcom
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
-      template:()=>h1('Hello World'))
+      template:()=>h1('Hello World')
   })
 </script>
 ```
@@ -39,7 +39,7 @@ npm install @qcom.io/qcom
   import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
   $({
       name:'QcomFunctions',
-      template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here'))
+      template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
       code:{
           log:()=>{
               //Do something here
@@ -71,9 +71,11 @@ npm install @qcom.io/qcom
       code:{
             add:()=>{
                     this.data.counter += + 1
+                    this.updater()
             },
             sub:()=>{
                     this.data.counter -= - 1
+                    this.updater()
             }
       }
   })
