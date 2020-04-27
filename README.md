@@ -67,14 +67,14 @@ npm install @qcom.io/qcom
                         h1(this.data.counter),
                         button({click:'QcomData.add()'},'+'),
                         button({click:'QcomData.sub()'},'-')
-                     )
+                     ),
       code:{
             add:()=>{
-                    this.data.counter += + 1
+                    this.data.counter +=  1
                     this.updater()
             },
             sub:()=>{
-                    this.data.counter -= - 1
+                    this.data.counter -=  1
                     this.updater()
             }
       }
