@@ -226,7 +226,7 @@ $({
 | nav()                        	| button()            	| input()            	| form()             	| option()                   	| select()          	|
 | span()                       	| textarea()          	| slot()             	| i()                	| view()                     	| label()           	|
 | icon('material-icon')   	    | range()             	| len()              	| getid(id)        	    | gethtml(id)              	    | gettext(id)     	    |
-| change(id,html)     	        | list([])         	    | color.color_name   	|                    	|                            	|                   	|
+| change(id,html)     	        | list([])         	    | color.color_name   	|                    	| find()                      	|                   	|
 | click:'name.function()' 	    | rev(str)       	    | random([])         	| random_keys([])    	| random_values([])          	| String.hash()     	|
 | qcom.get(url)              	| qcom.post(url,{}) 	| qcom.put(url,{}) 	    | qcom.delete(url) 	    | await import_module()    	    | camelCaseToDash() 	|
 | dashToCamelCase()            	| dashToPascalCase()  	| isFunction()       	| key()            	    | loop({data:[],html:div()}) 	| when().then()     	|
