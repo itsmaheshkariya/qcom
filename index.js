@@ -161,7 +161,7 @@ window.onload = function () {
             })
 
         }
-        else if(e.target.innerHTML == ''){
+        else if(e.target.shadowRoot){
 
             if(e.target.shadowRoot.mode == 'open'){
             // let hold = e.target.shadowRoot.querySelectorAll('[call]')
@@ -831,9 +831,6 @@ export let loop = (arg)=>{
     return temp
 }
 
-// export let when = (args) => {
-//     return args
-// }
 
 export let div = makeMyFunction('div')
 export let label = makeMyFunction('label')
@@ -850,6 +847,7 @@ export let title = makeMyFunction('title')
 export let body = makeMyFunction('body')
 export let li = makeMyFunction('li')
 export let ul = makeMyFunction('ul')
+export let ol = makeMyFunction('ol')
 export let table = makeMyFunction('table')
 export let thead = makeMyFunction('thead')
 export let tr = makeMyFunction('tr')
@@ -868,7 +866,7 @@ export let option = makeMyFunction('option')
 export let select = makeMyFunction('select')
 export let span = makeMyFunction('span')
 export let textarea = makeMyFunction('textarea')
-export let template = makeMyFunction('template')
+// export let template = makeMyFunction('template')
 export let slot = makeMyFunction('slot')
 export let i = makeMyFunction('i')
 export let icon = (val) => i({class:'material-icons'},val)
@@ -1449,9 +1447,11 @@ export let MakeClass = (classOf,attributes,hold) => {
                 });
 
             }
+
             if(hold.globalcss){
                 globalcss(hold.globalcss)
             }
+
 
             if(hold.el){
                 this.el = hold.el;
@@ -1465,6 +1465,7 @@ export let MakeClass = (classOf,attributes,hold) => {
             // if(hold.css){
             //     this.css = hold.css
             // }
+
             if(hold.methods){
                 this.methods = hold.methods;
                 for(let i = 0;i<Object.keys(this.methods).length;i++){
@@ -1479,8 +1480,14 @@ export let MakeClass = (classOf,attributes,hold) => {
             // if(hold.newhtml){
             //     this.newhtml = hold.newhtml
             // }
+            if(hold.template){
+                this.template = hold.template
+                eval('this.template'+'='+this.template)
+
+            }
             if(hold.created){
                 this.created = hold.created;
+                // template1()
                 eval('('+this.created+')()');
 
 
@@ -1489,7 +1496,19 @@ export let MakeClass = (classOf,attributes,hold) => {
                 if(hold.class == 'QcomApp' || hold.name == 'QcomApp'){
                     this.html($('QcomLayout')())
                 }else{
-                    eval('this.updater()')
+                    if(hold.template){
+                        if(hold.code.updater){
+                            eval('this.updater()')
+                        }else{
+                            eval('this.render=this.updater=()=>this.html(this.template());this.updater()')
+                        }
+
+                    }else{
+                        eval('this.updater()')
+                    }
+
+                    // this.updater()
+
                 }
             }
 

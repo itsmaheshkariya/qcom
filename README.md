@@ -1,4 +1,9 @@
 # Qcom.io
+[![Dependency Status](https://david-dm.org/maheshkareeya/qcom.svg)](https://david-dm.org/maheshkareeya/qcom)
+[![devDependency Status](https://david-dm.org/maheshkareeya/cli/dev-status.svg)](https://david-dm.org/maheshkareeya/cli#info=devDependencies)
+[![NPM version](https://badge.fury.io/js/%40qcom.io%2Fqcom.svg)](https://www.npmjs.com/package/@qcom.io/qcom)
+![Downloads](https://img.shields.io/npm/dm/%40qcom.io%2Fqcom.svg?style=flat)
+
 
 ### Javascript Framework
 
@@ -21,28 +26,21 @@ npm install @qcom.io/qcom
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
-      created:()=>{
-          this.html(h1('Hello World'))
-      }
+      template:()=>h1('Hello World'))
   })
 </script>
 ```
 
-#### Methods
+#### Functions
 ```html
-<qcom-methods></qcom-methods>
+<qcom-functions></qcom-functions>
 
 <script type="module">
   import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
   $({
-      name:'QcomMethods',
+      name:'QcomFunctions',
+      template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here'))
       code:{
-          updater:()=>{
-              this.html(
-                div(
-                  h1({click:'QcomMethods.log()'},'Click Here')
-                ))
-          },
           log:()=>{
               //Do something here
               alert('clicked')
@@ -65,19 +63,17 @@ npm install @qcom.io/qcom
       data:{
           counter:0
       },
+      template:()=>div( /* div must be here to wrap all internal tags*/
+                        h1(this.data.counter),
+                        button({click:'QcomData.add()'},'+'),
+                        button({click:'QcomData.sub()'},'-')
+                     )
       code:{
-            updater:()=>{
-                this.html(div(
-                    h1(this.data.counter),
-                    btn({is:'md',click:'QcomData.add()'},'+'),
-                    btn({is:'md',click:'QcomData.sub()'},'-')
-                ))
-            },
             add:()=>{
-                this.update.counter = this.data.counter + 1
+                    this.data.counter += + 1
             },
             sub:()=>{
-                    this.update.counter = this.data.counter - 1
+                    this.data.counter -= - 1
             }
       }
   })
@@ -99,9 +95,7 @@ npm install @qcom.io/qcom
                 {id:4,name:'bob',age:32},
                 {id:5,name:'brad',age:36}]
       },
-      code:{
-            updater:()=>{
-                this.html(div(
+      template:()=>div(
                     table(
                         tr(
                             td('Index'),
@@ -111,15 +105,13 @@ npm install @qcom.io/qcom
                         loop({
                             data:this.data.items,
                             html:tr(
-                                td('#',key('id')),
+                                td('#{{id}}'),
                                 td(key('name')),
                                 td(key('age'))
                             )
                         })
                     )
-                ))
-            }
-      }
+                )
   })
 </script>
 ```
@@ -129,35 +121,36 @@ npm install @qcom.io/qcom
 <qcom-get></qcom-get>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
-  $({
-      name:'QcomGet',
-      data:{
-          items:[]
-      },
-      code:{
-            updater:async ()=>{
-            this.update.items = await qcom.get('https://jsonplaceholder.typicode.com/todos/')
-                this.html(div(
-                    table(
-                        tr(
-                            td('Id'),
-                            td('Title'),
-                            td('completed')
-                        ),
-                        loop({
-                            data:this.data.items,
-                            html:tr(
-                                td(key('id')),
-                                td(key('title')),
-                                td('State is {{completed}}') // use {{}} inside text
-                            )
-                        })
-                    )
-                ))
-            }
-      }
-  })
+import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+$({
+    name:'QcomGet',
+    data:{
+        items:[]
+    },
+    template:()=>div(
+        table(
+            tr(
+                td('Id'),
+                td('Title'),
+                td('completed')
+            ),
+            loop({
+                data:this.data.items,
+                html:tr(
+                    td(key('id')),
+                    td(key('title')),
+                    td('State is {{completed}}') // use {{}} inside text
+                )
+            })
+        )
+    ),
+    code:{
+        updater:async ()=>{
+            this.data.items = await qcom.get('https://jsonplaceholder.typicode.com/todos/')
+            this.html(this.template())
+        }
+    }
+})
 
 </script>
 ```
@@ -186,15 +179,11 @@ npm install @qcom.io/qcom
               marginTop:'5px'
           }
       },
-      code:{
-            updater:async ()=>{
-                this.html(div(
-                    h1({class:'mt',style:{ /* Inline CSS*/
-                        border:'2px solid red'
-                    }},'Inline Internal and global css applied successfully')
-                ))
-            }
-      }
+      template:()=>div(
+                        h1({class:'mt',style:{ /* Inline CSS*/
+                            border:'2px solid red'
+                        }},'Inline Internal and global Style')
+                    )
   })
 
 </script>
@@ -225,6 +214,23 @@ npm install @qcom.io/qcom
   })
 </script>
 ``` -->
+## Functions
+
+| btn({is:''})                 	| is:'sm'             	| is:'md'            	| is:'lg'            	| is:'block'                 	| is:'link'         	|
+|------------------------------	|---------------------	|--------------------	|--------------------	|----------------------------	|-------------------	|
+| center()                     	| left()              	|       right()      	| justify()          	| container()                	| row()             	|
+| col({sm:'3',md:'6',lg:'12'}) 	| div()               	| p()                	| pre()              	| h1()                       	| h2()              	|
+| h3()                         	| h4()                	| h5()               	| h6()               	| head()                     	| title()           	|
+| body()                       	| ul()                	| ol()               	| li()               	| table()                    	| thead()           	|
+| tbody()                      	| th()                	| tr()               	| td()               	| header()                   	| footer()          	|
+| nav()                        	| button()            	| input()            	| form()             	| option()                   	| select()          	|
+| span()                       	| textarea()          	| slot()             	| i()                	| view()                     	| label()           	|
+| icon('material-icon')   	    | range()             	| len()              	| getid(id)        	    | gethtml(id)              	    | gettext(id)     	    |
+| change(id,html)     	        | list([])         	    | color.color_name   	|                    	|                            	|                   	|
+| click:'name.function()' 	    | rev(str)       	    | random([])         	| random_keys([])    	| random_values([])          	| String.hash()     	|
+| qcom.get(url)              	| qcom.post(url,{}) 	| qcom.put(url,{}) 	    | qcom.delete(url) 	    | await import_module()    	    | camelCaseToDash() 	|
+| dashToCamelCase()            	| dashToPascalCase()  	| isFunction()       	| key()            	    | loop({data:[],html:div()}) 	| when().then()     	|
+
 
 ## License
 
