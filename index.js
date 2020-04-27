@@ -847,7 +847,6 @@ export let title = makeMyFunction('title')
 export let body = makeMyFunction('body')
 export let li = makeMyFunction('li')
 export let ul = makeMyFunction('ul')
-export let ol = makeMyFunction('ol')
 export let table = makeMyFunction('table')
 export let thead = makeMyFunction('thead')
 export let tr = makeMyFunction('tr')
@@ -855,6 +854,7 @@ export let th = makeMyFunction('th')
 export let tbody = makeMyFunction('tbody')
 export let head = makeMyFunction('head')
 export let td = makeMyFunction('td')
+export let ol = makeMyFunction('ol')
 export let header = makeMyFunction('header')
 export let footer = makeMyFunction('footer')
 export let nav = makeMyFunction('nav')
@@ -1496,7 +1496,7 @@ export let MakeClass = (classOf,attributes,hold) => {
                     this.html($('QcomLayout')())
                 }else{
                     if(hold.template){
-                        if(hold.code.updater){
+                        if(this.updater){
                             eval('this.updater()')
                         }else{
                             eval('this.render=this.updater=()=>this.html(this.template());this.updater()')
