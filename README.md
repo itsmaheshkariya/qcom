@@ -190,37 +190,51 @@ $({
 
 </script>
 ```
-<!-- #### When Then
+#### Qcom Router
 ```html
-<qcom-when-then></qcom-when-then>
-
+<qcom-main></qcom-main>
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
-  $({
-      name:'QcomWhenThen',
-      data:{
-          item:1
-      },
-      code:{
-            updater:()=>{
-                this.html(div(
-                    when(this.data.item == 10)
-                    .then(()=>h2({click:'QcomWhenThen.add()'},'This is true'))
-                ))
-            },
-            addone:()=>{
-                this.update.item = this.data.item + 1
-                this.updater()
+import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+    $({
+        name:'QcomOne',template:()=>div(
+            h1('Page One')
+        )
+    })
+    $({
+        name:'QcomTwo',template:()=>div(
+            h1('Page Two')
+        )
+    })
+    $({
+        name:'QcomError',template:()=>div(
+            h1('404 Page')
+        )
+    })
+    $({
+        name:'QcomMain',
+        template:()=>div(
+                appbar(
+                    btn({route:'/QcomOne',is:'link', class:'ml12'},'One'),
+                    btn({route:'/QcomTwo',is:'link', class:'ml12'},'Two'),
+                    btn({route:'/QcomError',is:'link', class:'ml12'},'404')
+                ),
+                div({class:'mt12', id:'root'})
+            ),
+            router:{
+                root:'QcomOne',
+                view:'root',
+                error:$('QcomError')(),
+                links:['QcomOne','QcomTwo']
             }
-      }
-  })
+    })
 </script>
-``` -->
+
+```
 ## Functions
 
 | btn({is:''})                 	| is:'sm'             	| is:'md'            	| is:'lg'            	| is:'block'                 	| is:'link'         	|
 |------------------------------	|---------------------	|--------------------	|--------------------	|----------------------------	|-------------------	|
-| center()                     	| left()              	|       right()      	| justify()          	| container()                	| row()             	|
+| center()                     	| left()              	|right()      	        | justify()          	| container()                	| row()             	|
 | col({sm:'3',md:'6',lg:'12'}) 	| div()               	| p()                	| pre()              	| h1()                       	| h2()              	|
 | h3()                         	| h4()                	| h5()               	| h6()               	| head()                     	| title()           	|
 | body()                       	| ul()                	| ol()               	| li()               	| table()                    	| thead()           	|

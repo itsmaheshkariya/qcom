@@ -1497,17 +1497,21 @@ export let MakeClass = (classOf,attributes,hold) => {
                 }else{
                     if(hold.template){
                         if(this.updater){
-                            eval('this.updater()')
+                            eval('this.render=()=>this.html(this.template());this.updater();this.render();')
+                        }else if(this.onload){
+                            eval('this.render=()=>this.html(this.template());this.onload();this.render();')
                         }else{
                             eval('this.render=this.updater=()=>this.html(this.template());this.updater()')
                         }
 
                     }else{
-                        eval('this.updater()')
+                        if(this.updater){
+                            eval('this.updater()')
+                        }else{
+                            eval('this.onload()')
+                        }
+
                     }
-
-                    // this.updater()
-
                 }
             }
 
@@ -1673,7 +1677,8 @@ export class Qcom  {
                         }
                     }
                 function navigate(event){
-                    let route = event.target.attributes[0].value;
+                    let route = event.target.getAttribute('route')
+                    // let route = event.target.attributes[0].value;
                     let routeInfo = myFirstRouter.routes.filter((r)=>{
                         if(r.type == 'dynamic')
                         {
@@ -2734,6 +2739,9 @@ $({
     created:()=>{
         this.design(
             {'div':{
+                display:'flex',
+                flexFlow:'row wrap',
+
                 backgroundColor: theme.background,
                 color: theme.color,
                 maxHeight: '50px',
@@ -2742,13 +2750,15 @@ $({
                 padding: '10px',
                 zIndex : '9999',
                 marginLeft:'-7px',
+                marginBottom:'50px',
                 position: 'fixed',
                 top: 0,
                 width: '99%',
                 boxShadow: "0 2px 5px 0 rgba(0, 0, 0, 0.26)"
             }}
         )
-        this.html(div(this.getAttribute('title')+slot()))
+        let title = this.getAttribute('title') == null?'':this.getAttribute('title')
+        this.html(div(title+slot()))
     },
     attributes:['title','actions','background']
 })
@@ -2982,3 +2992,5 @@ export let of = {
     /** 🥵 */
     hot_face:'🥵',
 }
+/*margin padding from all side*/
+globalcss({'.mt1':{marginTop:'0.25rem'},'.mb1':{marginBottom:'0.25rem'},'.ml1':{marginLeft:'0.25rem'},'.mr1':{marginRight:'0.25rem'},'.mt2':{marginTop:'0.5rem'},'.mb2':{marginBottom:'0.5rem'},'.ml2':{marginLeft:'0.5rem'},'.mr2':{marginRight:'0.5rem'},'.mt3':{marginTop:'0.75rem'},'.mb3':{marginBottom:'0.75rem'},'.ml3':{marginLeft:'0.75rem'},'.mr3':{marginRight:'0.75rem'},'.mt4':{marginTop:'1rem'},'.mb4':{marginBottom:'1rem'},'.ml4':{marginLeft:'1rem'},'.mr4':{marginRight:'1rem'},'.mt5':{marginTop:'1.25rem'},'.mb5':{marginBottom:'1.25rem'},'.ml5':{marginLeft:'1.25rem'},'.mr5':{marginRight:'1.25rem'},'.mt6':{marginTop:'1.5rem'},'.mb6':{marginBottom:'1.5rem'},'.ml6':{marginLeft:'1.5rem'},'.mr6':{marginRight:'1.5rem'},'.mt7':{marginTop:'1.75rem'},'.mb7':{marginBottom:'1.75rem'},'.ml7':{marginLeft:'1.75rem'},'.mr7':{marginRight:'1.75rem'},'.mt8':{marginTop:'2rem'},'.mb8':{marginBottom:'2rem'},'.ml8':{marginLeft:'2rem'},'.mr8':{marginRight:'2rem'},'.mt9':{marginTop:'2.25rem'},'.mb9':{marginBottom:'2.25rem'},'.ml9':{marginLeft:'2.25rem'},'.mr9':{marginRight:'2.25rem'},'.mt10':{marginTop:'2.5rem'},'.mb10':{marginBottom:'2.5rem'},'.ml10':{marginLeft:'2.5rem'},'.mr10':{marginRight:'2.5rem'},'.mt11':{marginTop:'2.75rem'},'.mb11':{marginBottom:'2.75rem'},'.ml11':{marginLeft:'2.75rem'},'.mr11':{marginRight:'2.75rem'},'.mt12':{marginTop:'3rem'},'.mb12':{marginBottom:'3rem'},'.ml12':{marginLeft:'3rem'},'.mr12':{marginRight:'3rem'},'.pt1':{paddingTop:'0.25rem'},'.pb1':{paddingBottom:'0.25rem'},'.pl1':{paddingLeft:'0.25rem'},'.pr1':{paddingRight:'0.25rem'},'.pt2':{paddingTop:'0.5rem'},'.pb2':{paddingBottom:'0.5rem'},'.pl2':{paddingLeft:'0.5rem'},'.pr2':{paddingRight:'0.5rem'},'.pt3':{paddingTop:'0.75rem'},'.pb3':{paddingBottom:'0.75rem'},'.pl3':{paddingLeft:'0.75rem'},'.pr3':{paddingRight:'0.75rem'},'.pt4':{paddingTop:'1rem'},'.pb4':{paddingBottom:'1rem'},'.pl4':{paddingLeft:'1rem'},'.pr4':{paddingRight:'1rem'},'.pt5':{paddingTop:'1.25rem'},'.pb5':{paddingBottom:'1.25rem'},'.pl5':{paddingLeft:'1.25rem'},'.pr5':{paddingRight:'1.25rem'},'.pt6':{paddingTop:'1.5rem'},'.pb6':{paddingBottom:'1.5rem'},'.pl6':{paddingLeft:'1.5rem'},'.pr6':{paddingRight:'1.5rem'},'.pt7':{paddingTop:'1.75rem'},'.pb7':{paddingBottom:'1.75rem'},'.pl7':{paddingLeft:'1.75rem'},'.pr7':{paddingRight:'1.75rem'},'.pt8':{paddingTop:'2rem'},'.pb8':{paddingBottom:'2rem'},'.pl8':{paddingLeft:'2rem'},'.pr8':{paddingRight:'2rem'},'.pt9':{paddingTop:'2.25rem'},'.pb9':{paddingBottom:'2.25rem'},'.pl9':{paddingLeft:'2.25rem'},'.pr9':{paddingRight:'2.25rem'},'.pt10':{paddingTop:'2.5rem'},'.pb10':{paddingBottom:'2.5rem'},'.pl10':{paddingLeft:'2.5rem'},'.pr10':{paddingRight:'2.5rem'},'.pt11':{paddingTop:'2.75rem'},'.pb11':{paddingBottom:'2.75rem'},'.pl11':{paddingLeft:'2.75rem'},'.pr11':{paddingRight:'2.75rem'},'.pt12':{paddingTop:'3rem'},'.pb12':{paddingBottom:'3rem'},'.pl12':{paddingLeft:'3rem'},'.pr12':{paddingRight:'3rem'},})
