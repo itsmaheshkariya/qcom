@@ -230,6 +230,127 @@ import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
 </script>
 
 ```
+
+
+
+
+#### Complete Example (index.html)
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QcomJs</title>
+</head>
+<body>
+    <qcom-app></qcom-app>
+</body>
+</html>
+<script type="module">
+import {$,color} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+    $({
+        name:'QcomApp',
+        template:()=>div(
+                appbar(
+                    hamburger_menu(
+                        ul({class:'menu'},
+                            li({route:'/QcomOne',class:'item'},'QcomOne'),
+                            li({route:'/QcomTwo',class:'item'},'QcomTwo'))),
+                    btn({is:'link',class:'ml12'},'Appbar')
+                ),
+                div({class:'mt12', id:'root'})
+
+            ),
+        code:{
+            onload:async()=>{
+                let {QcomOne,QcomTwo,QcomError} = await import_module('./main.js')
+                $(QcomOne)
+                $(QcomTwo)
+                $(QcomError)
+            }
+        },
+        router:{
+            root:'QcomOne',
+            view:'root',
+            error:$('QcomError')(),
+            links:['QcomOne','QcomTwo']
+        },
+        theme: {
+            background: color.orange_darken_1,
+            color: color.white,
+            hover: color.orange_acent_1,
+            font: ''
+        }
+    })
+</script>
+```
+#### (main.js)
+```js
+export let QcomOne = {
+    name:'QcomOne',
+    type:'shadow',
+    data:{
+        items:[
+            {name:'mahesh'},{name:'dipak'}
+        ]
+    },
+    template:()=>div(h1('Page One'),loop({
+        data:this.data.items,
+        html:div(key('name'))
+    }))
+}
+
+export let QcomTwo ={
+    name:'QcomTwo',
+    data:{
+        items:[]
+    },
+    template:()=>row(
+        col(form(
+            h1('Registration'),
+            qinput(input({id:'name',class:'mb6',placeholder:'Name'})),
+            qinput(input({id:'email',class:'mb6',placeholder:'Email'})),
+            qinput(input({id:'password',class:'mb6',placeholder:'Password'})),
+            right(btn({click:'QcomTwo.post()',is:'md'},'Submit'))
+        )),
+        col(table(
+            tr(
+                td('Name'),
+                td('Email'),
+                td('Password')
+            ),
+            loop({
+                data:this.data.items,
+                html:tr(
+                    td(key('name')),
+                    td(key('email')),
+                    td(key('password'))
+                )
+            })
+        ))
+    ),
+    code:{
+        post:()=>{
+            this.data.items.push({
+                name:getval('name'),
+                email:getval('email'),
+                password:getval('password')
+            })
+            this.render()
+        }
+    }
+}
+
+export let QcomError = {
+    name:'QcomError',
+    template:()=>div(h1('404 Page'))
+}
+
+```
+### Demo
+![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/result.png)
+
 ## Functions
 
 | btn({is:''})                 	| is:'sm'             	| is:'md'            	| is:'lg'            	| is:'block'                 	| is:'link'         	|

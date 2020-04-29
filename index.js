@@ -1,3 +1,449 @@
+
+
+
+
+function Drawer(drawerElem) {
+    "use strict";
+
+    function checkMobile(a) {
+        return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4));
+    }
+
+    var drawerIcon = {
+            set: function (a) {},
+            setState: function (a, b) {},
+            setOnClick: function(a) {}
+        },
+        drawerBg,
+        drawerStarted = false,
+        width = drawerElem.offsetWidth,
+        correct = 0,
+        percent = 0,
+        trx = 0,
+        opened = false,
+        startMoveTime = 0,
+        startX = 0,
+        speedSwipe = 0,
+        isMobile = checkMobile(navigator.userAgent || navigator.vendor || window.opera),
+        isIE = window.navigator.msPointerEnabled,
+        isIE11 = window.navigator.pointerEnabled,
+        typeStart = isIE ? "MSPointerDown" : (isMobile ? "touchstart" : "mousedown"),
+        typeMove = isIE ? "MSPointerMove" : (isMobile ? "touchmove" : "mousemove"),
+        typeEnd = isIE ? "MSPointerUp" : (isMobile ? "touchend" : "mouseup"),
+        trZ = "translateZ(0)",
+        stateMoved = false,
+        transformProp = "transform",
+        transitionProp = "transition",
+        propPrefixCss = "",
+        antiSelect,
+        onOpened = function () {},
+        onClosed = function () {},
+        onMove = function (x, percent, animation, duration) {};
+
+    function setProperty(elem, property, value) {
+        elem.style[property] = value;
+    }
+
+    function transfrom(x) {
+        setProperty(drawerElem, transformProp, x + " " + trZ);
+    }
+
+    function move(x, e) {
+        if (x < 0) {
+            x = 0;
+        }
+        if (x > width) {
+            x = width;
+        }
+        if (!stateMoved) {
+            if (!isMobile) {
+                antiSelect.style.visibility = "visible";
+                if (!document.body.classList.contains("rx_noselect"))
+                    document.body.classList.add("rx_noselect");
+            }
+            if (trx == x) {
+                stateMoved = false;
+                return;
+            } else {
+                e.preventDefault();
+                stateMoved = true;
+            }
+
+        }
+        trx = x;
+        transfrom("translateX(-" + x + "px)");
+        percent = (1 - (x / width));
+        if (percent >= 1) {
+            percent = 1;
+        } else if (percent <= 0) {
+            percent = 0;
+        }
+        drawerIcon.set(percent * 100);
+        drawerBg.style.opacity = percent;
+        onMove(320 - x, percent, false, 0);
+    }
+
+    function setTransition(s) {
+        setProperty(drawerElem, transitionProp, propPrefixCss + "transform " + s + "s cubic-bezier(0.0, 0.0, 0.2, 1)");
+        setProperty(drawerBg, transitionProp, "opacity " + s + "s cubic-bezier(0.0, 0.0, 0.2, 1)");
+    }
+
+    function clearTransition() {
+        setProperty(drawerElem, transitionProp, "none");
+        setProperty(drawerBg, transitionProp, "none");
+    }
+
+    function openDrawer(s) {
+        s = s || 0.225;
+        opened = true;
+        setTransition(s);
+        drawerElem.style.opacity = 1;
+        drawerBg.style.opacity = 1;
+        drawerBg.style.visibility = "visible";
+        transfrom("translateX(0)");
+        drawerIcon.setState(1, s);
+        onMove(width, 1, true, s);
+        setTimeout(function () {
+            clearTransition();
+            if (drawerStarted) {
+                return;
+            }
+            onOpened();
+        }, s * 1000);
+    }
+
+    function closeDrawer(s) {
+        s = s || 0.225;
+        opened = false;
+        setTransition(s);
+        drawerBg.style.opacity = 0.001;
+        transfrom("translateX(-" + width + "px)");
+        drawerIcon.setState(0, s);
+        onMove(0, 0, true, s);
+        setTimeout(function () {
+            clearTransition();
+            if (drawerStarted) {
+                return;
+            }
+            drawerElem.style.opacity = 0.001;
+            drawerBg.style.visibility = "hidden";
+            onClosed();
+        }, s * 1000);
+    }
+
+    function toggleDrawer() {
+        if (opened) {
+            closeDrawer(0.225);
+        } else {
+            openDrawer(0.225);
+        }
+    }
+
+    function onMovedNoOpen(e) {
+        move(correct - e.touches[0].clientX, e);
+    }
+
+    function onMovedOpen(e) {
+        move(startX - e.touches[0].clientX, e);
+    }
+
+    function onMovedNoOpenDesktop(e) {
+        move(correct - e.clientX, e);
+    }
+
+    function onMovedOpenDesktop(e) {
+        move(startX - e.clientX, e);
+    }
+
+    window.addEventListener("resize", function (e) {
+        width = drawerElem.offsetWidth;
+        if (!opened) {
+            transfrom("translateX(-" + width + "px)");
+        }
+    });
+
+    drawerElem.addEventListener(typeStart, function (e) {
+        drawerElem.style.opacity = 1;
+        drawerBg.style.visibility = "visible";
+        startX = isMobile ? e.touches[0].clientX : e.clientX;
+        startMoveTime = new Date();
+        correct = width + startX;
+        drawerStarted = true;
+    });
+    document.addEventListener(typeStart, function (e) {
+        if (!drawerStarted) {
+            return;
+        }
+        if (opened) {
+            document.addEventListener(typeMove, isMobile ? onMovedOpen : onMovedOpenDesktop);
+        } else {
+            document.addEventListener(typeMove, isMobile ? onMovedNoOpen : onMovedNoOpenDesktop);
+        }
+    });
+
+    document.addEventListener(typeEnd, function (e) {
+        drawerStarted = false;
+        stateMoved = false;
+        if (!isMobile) {
+            antiSelect.style.visibility = "hidden";
+            document.body.classList.remove("rx_noselect");
+        }
+        document.removeEventListener(typeMove, isMobile ? onMovedOpen : onMovedOpenDesktop);
+        document.removeEventListener(typeMove, isMobile ? onMovedNoOpen : onMovedNoOpenDesktop);
+
+        speedSwipe = (((width / 2) / ((Math.abs((isMobile ? e.changedTouches[0].clientX : e.clientX) - startX)) / (new Date() - startMoveTime))) / 1000).toFixed(3);
+        if (speedSwipe == Infinity) {
+            if (!opened) {
+                closeDrawer(0);
+            } else {
+                openDrawer(0);
+            }
+            return;
+        }
+        if (trx == 0) {
+            return;
+        }
+        if (speedSwipe <= 0.150) {
+            speedSwipe = 0.150;
+        } else if (speedSwipe >= 0.5) {
+            speedSwipe = 0.5;
+        }
+        var intent = (startX - (isMobile ? e.changedTouches[0].clientX : e.clientX)) > 0;
+        if ((width / 2.25) > trx) {
+            if (intent && speedSwipe < 0.4) {
+                closeDrawer(speedSwipe);
+            } else {
+                openDrawer(speedSwipe);
+            }
+        } else {
+            if (!intent && speedSwipe < 0.4) {
+                openDrawer(speedSwipe);
+            } else {
+                closeDrawer(speedSwipe);
+            }
+        }
+        trx = 0;
+    });
+    this.setDrawerIcon = function (icon) {
+        drawerIcon = icon;
+        drawerIcon.setOnClick(function (e) {
+            toggleDrawer();
+        });
+    };
+    this.getDrawerIcon = function () {
+        return drawerIcon;
+    };
+    this.resetIconOnClick = function(){
+        drawerIcon.setOnClick(function (e) {
+            toggleDrawer();
+        });
+    };
+    this.onOpenListener = function (listener) {
+        onOpened = listener;
+    };
+    this.onCloseListener = function (listener) {
+        onClosed = listener;
+    };
+    this.onMoveListener = function (listener) {
+        onMove = listener;
+    };
+    this.openDrawer = function () {
+        openDrawer();
+    };
+    this.closeDrawer = function () {
+        closeDrawer();
+    };
+    this.toggleDrawer = function () {
+        toggleDrawer();
+    };
+    this.isOpen = function () {
+        return opened;
+    };
+
+    (function () {
+        drawerBg = document.createElement("DIV");
+        drawerBg.className = "drawer_bg";
+        drawerBg.id = "drawer_bg";
+        drawerElem.parentElement.insertBefore(drawerBg, drawerElem);
+        drawerBg.onclick = function () {
+            if (opened) {
+                closeDrawer(0.225);
+            }
+        };
+        antiSelect = document.createElement("DIV");
+        antiSelect.className = "antiSelect";
+        drawerElem.appendChild(antiSelect);
+        var label = document.createElement("DIV");
+        label.className = "label";
+        drawerElem.appendChild(label);
+        //Find prop name
+        var vendors;
+        if (antiSelect.style.transform === undefined) {
+            vendors = ['Webkit', 'Moz', 'ms', 'O'];
+            for (var vendor in vendors) {
+                if (antiSelect.style[vendors[vendor] + 'Transform'] !== undefined) {
+                    transformProp = vendors[vendor] + 'Transform';
+                    propPrefixCss = "-" + vendors[vendor].toLowerCase() + "-";
+                }
+                if (antiSelect.style[vendors[vendor] + 'Transition'] !== undefined) {
+                    transitionProp = vendors[vendor] + 'Transition';
+                }
+            }
+        }
+        if (/.*opera.*presto/i.test(navigator.userAgent)) {
+            trZ = "";
+        }
+    })();
+}
+
+function DrawerIcon(icon) {
+    "use strict";
+    var ic,
+        line1,
+        line2,
+        line3,
+        const1 = 1 / 300,
+        const2 = 1 / 500,
+        const3 = 2 / 3,
+        direction = true,
+        locked = false,
+        rotateLine,
+        scaleX,
+        transY,
+        transX,
+        scaleX2,
+        transX2,
+        rotateIc,
+        transformProp = "transform",
+        transitionProp = "transition",
+        trZ = "translateZ(0)",
+        propPrefixCss = "";
+
+    function setProperty(elem, property, value) {
+        elem.style[property] = value;
+    }
+
+    function enableAnimation(duration) {
+        var transition = propPrefixCss + "transform " + duration + "s ease";
+        setProperty(line1, transitionProp, transition);
+        setProperty(line2, transitionProp, transition);
+        setProperty(line3, transitionProp, transition);
+        setProperty(ic, transitionProp, transition);
+    }
+
+    function disableAnimation() {
+        setProperty(line1, transitionProp, "none");
+        setProperty(line2, transitionProp, "none");
+        setProperty(line3, transitionProp, "none");
+        setProperty(ic, transitionProp, "none");
+    }
+
+    this.state = function () {
+        return direction;
+    };
+
+    this.setOnClick = function (listener) {
+        icon.onclick = listener;
+    };
+
+    this.set = function (percent) {
+        if (locked) {
+            return;
+        }
+        if (percent > 100) {
+            percent = 100;
+        }
+        if (percent < 0) {
+            percent = 0;
+        }
+        if (percent >= 100) {
+            direction = false;
+        }
+        if (percent <= 0) {
+            direction = true;
+        }
+
+        rotateLine = 0.45 * percent;
+        scaleX = 1 - const1 * percent;
+        transY = 0.054 * percent;
+        transX = 0.033 * percent;
+        scaleX2 = 1 - const2 * percent;
+        transX2 = -0.01 * percent;
+        if (direction) {
+            rotateIc = 1.80 * percent;
+        } else {
+            rotateIc = 360 - (1.80 * percent);
+        }
+        setProperty(line1, transformProp, "rotate(" + rotateLine + "deg) scaleX(" + scaleX + ") translateY(" + transY + "px) translateX(" + transX + "px) " + trZ);
+        setProperty(line2, transformProp, "scaleX(" + scaleX2 + ") translateX(" + transX2 + "px) " + trZ);
+        setProperty(line3, transformProp, "rotate(" + (-rotateLine) + "deg) scaleX(" + scaleX + ") translateY(" + (-transY) + "px) translateX(" + transX + "px) " + trZ);
+        setProperty(ic, transformProp, "rotate(" + rotateIc + "deg) " + trZ);
+    };
+
+    this.setState = function (state, duration) {
+        duration = duration || 0.225;
+        enableAnimation(duration);
+        var temp = this;
+        switch (state) {
+            case 0:
+                this.set(1);
+                break;
+            case 1:
+                this.set(100);
+                break;
+        }
+        setTimeout(function () {
+            disableAnimation();
+            if (state === 0) {
+                temp.set(0);
+            }
+        }, Number(duration) * 1000);
+    };
+
+    this.lock = function () {
+        locked = true;
+    };
+    this.unLock = function () {
+        locked = false;
+    };
+
+    (function () {
+        icon.innerHTML += '<span class="ic"><i class="line one"></i><i class="line two"></i><i class="line thr"></i></span>';
+        ic = icon.querySelector(".ic");
+        line1 = ic.querySelector(".one");
+        line2 = ic.querySelector(".two");
+        line3 = ic.querySelector(".thr");
+        //Find prop name
+        var testEl = document.createElement('div'),
+            vendors;
+        if (testEl.style.transform === undefined) {
+            vendors = ['Webkit', 'Moz', 'ms', 'O'];
+            for (var vendor in vendors) {
+                if (testEl.style[vendors[vendor] + 'Transform'] !== undefined) {
+                    transformProp = vendors[vendor] + 'Transform';
+                    propPrefixCss = "-" + vendors[vendor].toLowerCase() + "-";
+                }
+                if (testEl.style[vendors[vendor] + 'Transition'] !== undefined) {
+                    transitionProp = vendors[vendor] + 'Transition';
+                }
+            }
+        }
+        if (/.*opera.*presto/i.test(navigator.userAgent)) {
+            trZ = "";
+        }
+    })();
+}
+
+
+
+
+
+
+
+
+
+
+
 // most imp
 // export class Html{
 //     constructor(gethtmlcontent){
@@ -24,18 +470,24 @@
 //     //   this[i] = this[i].name.toUpperCase();
 //     // }
 //   }
-// var headtag = document.getElementsByTagName('HEAD')[0];
-// var linkone = document.createElement('link');
-// linkone.rel = 'stylesheet';
-// linkone.type = 'text/css';
-// linkone.href = 'https://unpkg.com/@qcom.io/qcom@1.0.7/icons.css';
-// headtag.appendChild(linkone);
+
+// linkone.href = window.location.origin+'/node_modules/@qcom.io/qcom/'+'icons.css';
+if(navigator.onLine == true)
+{
+    var headtag = document.getElementsByTagName('HEAD')[0];
+    var linkone = document.createElement('link');
+    linkone.rel = 'stylesheet';
+    linkone.type = 'text/css';
+    linkone.href = 'https://unpkg.com/@qcom.io/qcom@latest/icons.css';
+    headtag.appendChild(linkone);
+}
 
 //   var linktwo = document.createElement('link');
 //   linktwo.rel = 'stylesheet';
 //   linktwo.type = 'text/css';
 //   linktwo.href = './node_modules/@qcom.io/qcom/fonts.css';
 //   headtag.appendChild(linktwo);
+
 // function qisRegistered(name) {
 //     return document.createElement(name).constructor.__proto__ !== window.HTMLElement;
 //   }
@@ -498,7 +950,10 @@ export let import_module = async(val) => {
     {
         val = val.replace('.ts','.js')
     }
-    return await import('../../../js/'+val)
+    if(val.startsWith('.')){
+        val = val.replace('.','')
+    }
+    return await import(window.location.origin+val)
 }
 
 class Theme{
@@ -1492,7 +1947,7 @@ export let MakeClass = (classOf,attributes,hold) => {
 
                 //
             }else{
-                if(hold.class == 'QcomApp' || hold.name == 'QcomApp'){
+                if((hold.class == 'QcomApp' || hold.name == 'QcomApp')&& hold.template == undefined){
                     this.html($('QcomLayout')())
                 }else{
                     if(hold.template){
@@ -1507,7 +1962,7 @@ export let MakeClass = (classOf,attributes,hold) => {
                     }else{
                         if(this.updater){
                             eval('this.updater()')
-                        }else{
+                        }else if(this.onload){
                             eval('this.onload()')
                         }
 
@@ -1560,7 +2015,11 @@ export let MakeClass = (classOf,attributes,hold) => {
             if(val.length == 1){
                 if(this.css){
                     docss(this,this.css,val)
+
                 }else if(hold.type == 'shadow'){
+                    if(hold.css == undefined){
+                        hold.css = {}
+                    }
                     docss(this,hold.css,val)
                 }
                 else{
@@ -1967,7 +2426,6 @@ new Qcom ({
 export let pointer = $("QcomPointer")
 
 
-
 // new Qcom ({
 //     class:"QcomAlert",
 //     created:()=>{
@@ -2015,6 +2473,7 @@ new Qcom ({
     }
 })
 export let qinput = $("QcomInput")
+
 export let globalcss = (val)  =>{
     for(let i in range(len(Object.keys(val)))){
         let _store_1 = '{"'+String(Object.keys(val)[i]+'":'+JSON.stringify(Object.values(val)[i]))+'}'
@@ -2501,6 +2960,12 @@ new Qcom ({
     // noOfCols:0,
     created:()=>
         {
+                if((this.getAttribute('lg') == undefined)&&(this.getAttribute('md') == undefined)&&(this.getAttribute('sm') == undefined)){
+                    this.setAttribute('sm','12')
+                    let no_of_cols =this.parentElement.childElementCount
+                    this.setAttribute('md',12/no_of_cols)
+                    this.setAttribute('lg',12/no_of_cols)
+                }
                 // hold.noOfCols = this.parentElement.childElementCount
                 if(window.matchMedia("(min-width: 768px)").matches == true){
                     this.lg(window.matchMedia("(min-width: 768px)"))
@@ -2741,14 +3206,13 @@ $({
             {'div':{
                 display:'flex',
                 flexFlow:'row wrap',
-
                 backgroundColor: theme.background,
                 color: theme.color,
                 maxHeight: '50px',
                 maxHeight: '50px',
                 fontSize:'1.4rem',
                 padding: '10px',
-                zIndex : '9999',
+                zIndex : '5',
                 marginLeft:'-7px',
                 marginBottom:'50px',
                 position: 'fixed',
@@ -2758,7 +3222,7 @@ $({
             }}
         )
         let title = this.getAttribute('title') == null?'':this.getAttribute('title')
-        this.html(div(title+slot()))
+        this.html(div(slot()+title))
     },
     attributes:['title','actions','background']
 })
@@ -2994,3 +3458,87 @@ export let of = {
 }
 /*margin padding from all side*/
 globalcss({'.mt1':{marginTop:'0.25rem'},'.mb1':{marginBottom:'0.25rem'},'.ml1':{marginLeft:'0.25rem'},'.mr1':{marginRight:'0.25rem'},'.mt2':{marginTop:'0.5rem'},'.mb2':{marginBottom:'0.5rem'},'.ml2':{marginLeft:'0.5rem'},'.mr2':{marginRight:'0.5rem'},'.mt3':{marginTop:'0.75rem'},'.mb3':{marginBottom:'0.75rem'},'.ml3':{marginLeft:'0.75rem'},'.mr3':{marginRight:'0.75rem'},'.mt4':{marginTop:'1rem'},'.mb4':{marginBottom:'1rem'},'.ml4':{marginLeft:'1rem'},'.mr4':{marginRight:'1rem'},'.mt5':{marginTop:'1.25rem'},'.mb5':{marginBottom:'1.25rem'},'.ml5':{marginLeft:'1.25rem'},'.mr5':{marginRight:'1.25rem'},'.mt6':{marginTop:'1.5rem'},'.mb6':{marginBottom:'1.5rem'},'.ml6':{marginLeft:'1.5rem'},'.mr6':{marginRight:'1.5rem'},'.mt7':{marginTop:'1.75rem'},'.mb7':{marginBottom:'1.75rem'},'.ml7':{marginLeft:'1.75rem'},'.mr7':{marginRight:'1.75rem'},'.mt8':{marginTop:'2rem'},'.mb8':{marginBottom:'2rem'},'.ml8':{marginLeft:'2rem'},'.mr8':{marginRight:'2rem'},'.mt9':{marginTop:'2.25rem'},'.mb9':{marginBottom:'2.25rem'},'.ml9':{marginLeft:'2.25rem'},'.mr9':{marginRight:'2.25rem'},'.mt10':{marginTop:'2.5rem'},'.mb10':{marginBottom:'2.5rem'},'.ml10':{marginLeft:'2.5rem'},'.mr10':{marginRight:'2.5rem'},'.mt11':{marginTop:'2.75rem'},'.mb11':{marginBottom:'2.75rem'},'.ml11':{marginLeft:'2.75rem'},'.mr11':{marginRight:'2.75rem'},'.mt12':{marginTop:'3rem'},'.mb12':{marginBottom:'3rem'},'.ml12':{marginLeft:'3rem'},'.mr12':{marginRight:'3rem'},'.pt1':{paddingTop:'0.25rem'},'.pb1':{paddingBottom:'0.25rem'},'.pl1':{paddingLeft:'0.25rem'},'.pr1':{paddingRight:'0.25rem'},'.pt2':{paddingTop:'0.5rem'},'.pb2':{paddingBottom:'0.5rem'},'.pl2':{paddingLeft:'0.5rem'},'.pr2':{paddingRight:'0.5rem'},'.pt3':{paddingTop:'0.75rem'},'.pb3':{paddingBottom:'0.75rem'},'.pl3':{paddingLeft:'0.75rem'},'.pr3':{paddingRight:'0.75rem'},'.pt4':{paddingTop:'1rem'},'.pb4':{paddingBottom:'1rem'},'.pl4':{paddingLeft:'1rem'},'.pr4':{paddingRight:'1rem'},'.pt5':{paddingTop:'1.25rem'},'.pb5':{paddingBottom:'1.25rem'},'.pl5':{paddingLeft:'1.25rem'},'.pr5':{paddingRight:'1.25rem'},'.pt6':{paddingTop:'1.5rem'},'.pb6':{paddingBottom:'1.5rem'},'.pl6':{paddingLeft:'1.5rem'},'.pr6':{paddingRight:'1.5rem'},'.pt7':{paddingTop:'1.75rem'},'.pb7':{paddingBottom:'1.75rem'},'.pl7':{paddingLeft:'1.75rem'},'.pr7':{paddingRight:'1.75rem'},'.pt8':{paddingTop:'2rem'},'.pb8':{paddingBottom:'2rem'},'.pl8':{paddingLeft:'2rem'},'.pr8':{paddingRight:'2rem'},'.pt9':{paddingTop:'2.25rem'},'.pb9':{paddingBottom:'2.25rem'},'.pl9':{paddingLeft:'2.25rem'},'.pr9':{paddingRight:'2.25rem'},'.pt10':{paddingTop:'2.5rem'},'.pb10':{paddingBottom:'2.5rem'},'.pl10':{paddingLeft:'2.5rem'},'.pr10':{paddingRight:'2.5rem'},'.pt11':{paddingTop:'2.75rem'},'.pb11':{paddingBottom:'2.75rem'},'.pl11':{paddingLeft:'2.75rem'},'.pr11':{paddingRight:'2.75rem'},'.pt12':{paddingTop:'3rem'},'.pb12':{paddingBottom:'3rem'},'.pl12':{paddingLeft:'3rem'},'.pr12':{paddingRight:'3rem'},})
+
+{/* <div class="header">
+                    <div class="avatar"></div>
+                    <div class="text">
+                        <div class="field name">Evgeny Nizamiev</div>
+                        <div class="field info">RadiationX</div>
+                    </div>
+</div>
+<ul class="menu">
+                    <li class="item">Menu Item 1</li>
+                    <li class="item">Menu Item 2</li>
+                    <li class="item subheader">Header</li>
+                    <li class="item">Menu Item 6</li>
+
+</ul>
+*/}
+$({
+    name:'HamburgerMenu',
+    // type:'shadow',
+    css:{ '.drawer .content .header': { 'height': '144px', 'background': '#fb8c00', 'position': 'relative' }, '.drawer .content .header .avatar': { 'background-image': 'url()', 'height': '64px', 'width': '64px', 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'border-radius': '100%', 'position': 'absolute', 'left': '16px', 'top': '16px', }, '.drawer .content .header .text': { 'height': '56px', 'position': 'absolute', 'bottom': '0', 'left': '0', 'width': '100%', 'box-sizing': 'border-box', 'padding': '8px 0', 'color': 'white', }, '.drawer .content .header .text .field': { 'padding-left': '16px', 'font-size': '14px', }, '.drawer .content .header .text .field.name': { 'font-weight': 'bold', }, '.drawer .content .header .text .field.info': { 'margin-top': '4px', }, '.drawer .content ul.menu': { 'padding': '8px 0', 'list-style': 'none', 'margin': '0', }, '.drawer .content ul.menu li.item': { 'display': 'block', 'font-size': '14px', 'font-weight': 'bold', 'height': '48px', 'line-height': '48px', 'padding-left': '72px', 'color': 'rgba(0, 0, 0, 0.87)', 'position': 'relative', }, '.drawer .content ul.menu li.item.subheader': { 'color': 'rgba(0, 0, 0, 0.54)', 'padding-left': '16px', 'margin-top': '8px', ' border-top': '1px solid rgba(0, 0, 0, 0.12)', }, '.drawer .content ul.menu li.item.subheader:after': { 'content': 'none', }, '.drawer .content ul.menu li.item:after': { 'content': "", 'background-image': "url('https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_brightness_high_black_24px.svg')", 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'height': '24px', 'width': '24px', 'position': 'absolute', 'left': '16px', 'top': '12px', 'opacity': '0.54' }, '.drawer .content ul.menu li.item:active': { 'background': 'rgba(0, 0, 0, 0.12)', }, '.rx_noselect': { '-webkit-touch-callout': 'none', '-webkit-user-select': 'none', '-khtml-user-select': 'none', '-moz-user-select': 'none', '-ms-user-select': 'none', 'user-select': 'none', }, '.drawer_bg': { 'position': 'fixed', 'background': 'rgba(0, 0, 0, 0.5)', 'top': '0', 'left': '0', 'right': "0", 'bottom': "0", 'width': '100%', 'height': '100%', 'z-index': '4', 'opacity': '0.001', '-webkit-transform': 'translateZ(0)', '-moz-transform': 'translateZ(0)', '-ms-transform': 'translateZ(0)', '-o-transform': 'translateZ(0)', 'transform': 'translateZ(0)', 'visibility': 'hidden', }, '.drawer': { 'max-width': '320px', 'width': '75%', 'height': '100%', 'left': '0px', 'top': '0', 'bottom': '0', '-webkit-transform': 'translateX(-100%)', '-moz-transform': 'translateX(-100%)', '-ms-transform':' translateX(-100%)', '-o-transform': 'translateX(-100%)', 'transform': 'translateX(-100%)', 'background': 'white', 'position': 'fixed', 'z-index': '5', 'opacity': '0.001', '-webkit-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-moz-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-ms-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-o-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4),', 'box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', }, '.drawer .label': { 'position': 'absolute', 'top': '56px', 'bottom': '0', 'width': '32px', 'right': '-32px', }, '.drawer .antiSelect': { 'position': 'absolute', 'top': '0', 'left': '0', 'height': '100%', 'width': '100%', 'visibility': 'hidden', }, '.rx_icon .ic': { 'position': 'absolute', 'width': '24px', 'height': '24px', }, '.rx_icon .ic .line': { 'position': 'absolute', 'left': '3px', 'right': '3px', 'height': '2px', 'background': 'white', 'outline': '1px solid transparent', }, '.rx_icon .ic .line.one': { 'top': '6px', '-webkit-transform-origin': 'right bottom', '-moz-transform-origin': 'right bottom', '-ms-transform-origin': 'right bottom', '-o-transform-origin': 'right bottom', 'transform-origin': 'right bottom', }, '.rx_icon .ic .line.two': { 'top': '11px' }, '.rx_icon .ic .line.thr': { '-webkit-transform-origin': 'right top', '-moz-transform-origin': 'right top', '-ms-transform-origin': 'right top', '-o-transform-origin': 'right top', 'transform-origin': 'right top', 'top': '16px' } },
+    template:()=>div(
+        btn({class:"rx_icon",id:"rx_icon"}),
+    div({class:'drawer',id:'drawer'},
+    div({class:'content mt12'},this.innerHTML))),
+    code:{
+        onload:()=>{
+            var drawer,
+                drawerElem,
+                iconElem;
+            window.addEventListener("load", function (e) {
+                drawerElem = document.getElementById("drawer");
+                iconElem = document.getElementById("rx_icon");
+                drawer = new Drawer(drawerElem);
+                drawer.setDrawerIcon(new DrawerIcon(iconElem));
+                //Use methods
+                drawerElem.addEventListener('click',function () {
+                    drawer.closeDrawer()
+                });
+                drawerElem.style.userSelect = 'none'
+                // drawer.onOpenListener(function () {
+                //     console.log("open");
+                // });
+                // drawer.onCloseListener(function () {
+                //     console.log("close");
+                // });
+                // drawer.onMoveListener(function (x, percent, animation, duration) {
+                //     console.log(x + " " + percent + " " + animation + " " + duration);
+                // });
+                // drawer.openDrawer();
+                // drawer.closeDrawer();
+                // drawer.toggleDrawer();
+                // drawer.isOpen();
+                // drawer.resetIconOnClick();
+
+            });
+        }
+    }
+    // code:{
+    //     onload:()=>{
+    //         //window.onload = this.reportWindowSize;
+    //         window.onresize = this.reportWindowSize;
+    //     },
+    //      reportWindowSize:()=>{
+    //         if(window.innerWidth < 700){
+    //             this.showhamburgermenu()
+    //         }else{
+    //             this.hidehamburgermenu()
+    //         }
+    //     },
+    //     showhamburgermenu:()=>{
+    //         this.html(hold.template())
+    //     },
+    //     hidehamburgermenu:()=>{
+    //         hold.newtemplate = ' '
+    //         this.html(hold.newtemplate)
+    //     }
+
+    // }
+})
+
+export let hamburger_menu = $('HamburgerMenu')
+
+
+
