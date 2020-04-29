@@ -104,14 +104,12 @@ npm install @qcom.io/qcom
                             td('Name'),
                             td('Age')
                         ),
-                        loop({
-                            data:this.data.items,
-                            html:tr(
-                                td('#{{id}}'),
-                                td(key('name')),
-                                td(key('age'))
-                            )
-                        })
+            this.data.items.map(item =>
+                    tr(
+                        td(item.id),
+                        td(item.name),
+                        td(item.age))
+                        )
                     )
                 )
   })
@@ -136,14 +134,12 @@ $({
                 td('Title'),
                 td('completed')
             ),
-            loop({
-                data:this.data.items,
-                html:tr(
-                    td(key('id')),
-                    td(key('title')),
-                    td('State is {{completed}}') // use {{}} inside text
-                )
-            })
+            this.data.items.map(item =>
+                    tr(
+                        td(item.id),
+                        td(item.title),
+                        td(item.completed))
+                        )
         )
     ),
     code:{
@@ -295,10 +291,9 @@ export let QcomOne = {
             {name:'mahesh'},{name:'dipak'}
         ]
     },
-    template:()=>div(h1('Page One'),loop({
-        data:this.data.items,
-        html:div(key('name'))
-    }))
+    template:()=>div(h1('Page One'),
+            this.data.items.map(item =>
+                    div(item.name))
 }
 
 export let QcomTwo ={
