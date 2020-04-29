@@ -472,15 +472,24 @@ function DrawerIcon(icon) {
 //   }
 
 // linkone.href = window.location.origin+'/node_modules/@qcom.io/qcom/'+'icons.css';
+var headtag = document.getElementsByTagName('HEAD')[0];
+
 if(navigator.onLine == true)
 {
-    var headtag = document.getElementsByTagName('HEAD')[0];
     var linkone = document.createElement('link');
     linkone.rel = 'stylesheet';
     linkone.type = 'text/css';
     linkone.href = 'https://unpkg.com/@qcom.io/qcom@latest/icons.css';
     headtag.appendChild(linkone);
 }
+var metaone = document.createElement('meta');
+metaone.charset = 'UTF-8';
+headtag.appendChild(metaone);
+
+var metatwo = document.createElement('meta');
+metatwo.name = 'viewport';
+metatwo.content = 'width=device-width, initial-scale=1.0';
+headtag.appendChild(metatwo);
 
 //   var linktwo = document.createElement('link');
 //   linktwo.rel = 'stylesheet';
@@ -1249,6 +1258,60 @@ export let makeMyFunction = (tag) =>
     }
 }
 
+
+
+export let makeMyFunctionSingle = (tag) =>
+{
+    return (...val) =>
+    {
+
+            let temp = ''
+            let j = 0;
+            if(typeof Object.values(val)[0] === 'object'){
+                j = 1;
+            }
+            for(let i = j;i<val.length;i++)
+            {
+
+                if(isFunction(val[i])){
+                    let hold = val[i]()
+                    if(typeof hold == 'object'){
+                        hold.forEach(item=>{
+                            temp += item
+                        })
+
+                    }else{
+                        temp += hold
+                    }
+
+                }else{
+                    if(typeof val[i] == 'undefined'){
+                        console.log(val[i])
+                    }
+                    else{
+                        temp += val[i]
+                    }
+                    }
+            }
+
+            if(typeof Object.values(val)[0] === 'object'){
+
+                let val1 = val[0];
+                let val2 = recursiveLoop(val1)
+                // console.log(val2)
+                return '<'+tag+' '+val2+''+temp+'/>'
+            }else{
+                return '<'+tag+''+temp+'/>';
+            }
+
+
+
+
+    }
+}
+
+
+
 export let key = (val)=>{
     return '{{'+val+'}}'
 }
@@ -1316,10 +1379,92 @@ export let nav = makeMyFunction('nav')
 export let button = makeMyFunction('button')
 export let input = makeMyFunction('input')
 export let form = makeMyFunction('form')
-export let option = makeMyFunction('option')
 export let select = makeMyFunction('select')
 export let span = makeMyFunction('span')
 export let textarea = makeMyFunction('textarea')
+
+export let abbr = makeMyFunction('abbr')
+export let address = makeMyFunction('address')
+export let map = makeMyFunction('map')
+export let article = makeMyFunction('article')
+export let aside = makeMyFunction('aside')
+export let audio = makeMyFunction('audio')
+export let b = makeMyFunction('b')
+export let base = makeMyFunction('base')
+export let bdi = makeMyFunction('bdi')
+export let bdo = makeMyFunction('bdo')
+export let blockquote = makeMyFunction('blockquote')
+export let canvas = makeMyFunction('canvas')
+export let script = makeMyFunction('script')
+export let caption = makeMyFunction('caption')
+export let cite = makeMyFunction('cite')
+export let code = makeMyFunction('code')
+export let colgroup = makeMyFunction('colgroup')
+export let data = makeMyFunction('data')
+export let datalist = makeMyFunction('datalist')
+export let dl = makeMyFunction('dl')
+export let dd = makeMyFunction('dd')
+export let dt = makeMyFunction('dt')
+export let del = makeMyFunction('del')
+export let ins = makeMyFunction('ins')
+export let details = makeMyFunction('details')
+export let dfn = makeMyFunction('dfn')
+export let dialog = makeMyFunction('dialog')
+export let em = makeMyFunction('em')
+export let fieldset = makeMyFunction('fieldset')
+export let figure = makeMyFunction('figure')
+export let figcaption = makeMyFunction('figcaption')
+export let iframe = makeMyFunction('iframe')
+export let kbd = makeMyFunction('kbd')
+export let legend = makeMyFunction('legend')
+export let main = makeMyFunction('main')
+export let mark = makeMyFunction('mark')
+export let meter = makeMyFunction('meter')
+export let noscript = makeMyFunction('noscript')
+export let optgroup = makeMyFunction('optgroup')
+export let picture = makeMyFunction('picture')
+export let progress = makeMyFunction('progress')
+export let q = makeMyFunction('q')
+export let rp = makeMyFunction('rp')
+export let rt = makeMyFunction('rt')
+export let ruby = makeMyFunction('ruby')
+export let s = makeMyFunction('s')
+export let samp = makeMyFunction('samp')
+export let section = makeMyFunction('section')
+export let small = makeMyFunction('small')
+export let strong = makeMyFunction('strong')
+export let style = makeMyFunction('style')
+export let sub = makeMyFunction('sub')
+export let summary = makeMyFunction('summary')
+export let sup = makeMyFunction('sup')
+export let svg = makeMyFunction('svg')
+export let template = makeMyFunction('template')
+export let tfoot = makeMyFunction('tfoot')
+export let time = makeMyFunction('time')
+export let u = makeMyFunction('u')
+export let wbr = makeMyFunction('wbr')
+
+
+
+export let option = makeMyFunctionSingle('option')
+export let img = makeMyFunctionSingle('img')
+export let link = makeMyFunctionSingle('link')
+export let embed = makeMyFunctionSingle('embed')
+export let hr = makeMyFunctionSingle('hr')
+export let area = makeMyFunctionSingle('area')
+export let meta = makeMyFunctionSingle('meta')
+export let object = makeMyFunctionSingle('object')
+export let param = makeMyFunctionSingle('param')
+export let source = makeMyFunctionSingle('source')
+
+export let circle = makeMyFunctionSingle('circle')
+export let rect = makeMyFunctionSingle('rect')
+export let polygon = makeMyFunctionSingle('polygon')
+export let stop = makeMyFunctionSingle('stop')
+export let ellipse = makeMyFunctionSingle('ellipse')
+export let track = makeMyFunctionSingle('track')
+
+
 // export let template = makeMyFunction('template')
 export let slot = makeMyFunction('slot')
 export let i = makeMyFunction('i')
@@ -2090,6 +2235,9 @@ export class Qcom  {
                     }
                     if(hold.class == undefined && hold.name == undefined){
                         hold.class = 'QcomApp'
+                        var _bodytag = document.getElementsByTagName('BODY')[0];
+                        var _qcomapp = document.createElement('qcom-app');
+                        _bodytag.appendChild(_qcomapp);
 
                     }
                 if(hold.attributes){
@@ -2372,8 +2520,8 @@ export class Qcom  {
 //                 }
 //             }
 //         }
-var style = document.createElement('style');
-document.head.appendChild(style);
+var _style = document.createElement('style');
+document.head.appendChild(_style);
 
 new Qcom ({
     class:"QcomCenter",
@@ -2450,37 +2598,130 @@ export let pointer = $("QcomPointer")
 // }
 
 new Qcom ({
-    class:"QcomInput",
-    created:()=>{
-        for(let i in range(this.children.length)){
-            this.children[i].style.display= 'block';
-            this.children[i].style.outline= 'none';
-            this.children[i].style.width= '100%';
-            this.children[i].style.height= 'calc(1.5em + .75rem + 2px)';
-            this.children[i].style.padding= '.375rem .75rem';
-            this.children[i].style.fontSize= '1rem';
-            this.children[i].style.fontWeight= '400';
-            this.children[i].style.lineHeight= '1.5';
-            this.children[i].style.color= '#495057';
-            this.children[i].style.backgroundColor= '#fff';
-            this.children[i].style.backgroundClip= 'padding-box';
-            this.children[i].style.border= '1px solid #ced4da';
-            this.children[i].style.borderRadius= '.25rem';
-            this.children[i].style.boxSizing= 'border-box';
-            this.children[i].style.transition= 'border-color .15s ease-in-out,box-shadow .15s ease-in-out';
+    class:"QcomMaterial",
+    code:{
+        onload:()=>{
+            this.check(this)
+        },
+        check:(val)=>{
+            for(let i in range(val.children.length)){
+                if(val.children[i].childNodes.length > 0){
+                    this.check(val.children[i])
+                }
+                    if(val.children[i].nodeName == 'INPUT'){
+                        val.children[i].style.display= 'block';
+                        val.children[i].style.outline= 'none';
+                        val.children[i].style.width= '100%';
+                        val.children[i].style.height= 'calc(1.5em + .75rem + 2px)';
+                        val.children[i].style.padding= '.375rem .75rem';
+                        val.children[i].style.fontSize= '1rem';
+                        val.children[i].style.fontWeight= '400';
+                        val.children[i].style.lineHeight= '1.5';
+                        val.children[i].style.color= '#495057';
+                        val.children[i].style.backgroundColor= '#fff';
+                        val.children[i].style.backgroundClip= 'padding-box';
+                        val.children[i].style.border= '1px solid #ced4da';
+                        val.children[i].style.borderRadius= '.25rem';
+                        val.children[i].style.boxSizing= 'border-box';
+                        val.children[i].style.transition= 'border-color .15s ease-in-out,box-shadow .15s ease-in-out';
+                }else if(val.children[i].nodeName == 'BUTTON'){
 
+                    val.children[i].style.display= 'block';
+                    val.children[i].style.padding= '10px 25px';
+
+                    if(val.children[i].getAttribute('is') == 'block')
+                    val.children[i].style.width= '100%';
+                    if(val.children[i].getAttribute('is') == 'md')
+                    val.children[i].style.padding= '1rem 2rem';
+                    if(val.children[i].getAttribute('is') == 'sm')
+                    val.children[i].style.padding= '0.5rem 1rem';
+
+                    val.children[i].style.textAlign= 'center';
+                    val.children[i].style.outline= 'none';
+                    val.children[i].style.position= 'relative';
+                    val.children[i].style.overflow= 'hidden';
+                    val.children[i].style.borderRadius= '4px';
+                    val.children[i].style.border= 'none';
+
+                    val.children[i].style.background= theme.background; /*#6A1B9A*/
+
+                    val.children[i].style.fontWeight= '500';
+                    val.children[i].style.color= '#fff';
+                    val.children[i].style.boxShadow= '0px 1px 2px 0px rgba(0, 0, 0, 0.15)';
+                    val.children[i].style.cursor= 'pointer';
+
+                    globalcss({
+                        '.wave':{
+                            'position': 'absolute',
+                            'top': '10px',
+                            'left': '20px',
+
+                            'width': '5px',
+                            'height': '5px',
+
+                            'border-radius': '100%',
+                            'transform': 'scale(0)',
+                            'background': 'rgba(255,255,255,.4)',
+                          },
+
+                          '.material-btn--active .wave':{
+                            'animation': 'wave-animation 1.9s',
+                          },
+                          '@keyframes wave-animation':{
+                            'from':{
+                              'opacity': '1',
+                              'transform': 'scale(10)',
+                            },
+                            'to':{
+                              'transform':'scale(70)',
+                              'opacity': '0',
+                            }
+                          }
+                    })
+
+                    let btn1 = val.children[i]
+                    let waveBg = document.createElement("DIV");
+                    waveBg.className = "wave";
+                    btn1.appendChild(waveBg);
+                    btn1.onmousedown= function(event){
+                      var wave = btn1.querySelector('.wave');
+                      var className = 'material-btn--active';
+                      if(btn1.classList.contains(className)){
+                        btn1.classList.remove(className);
+                      }
+                      wave.style.left = event.clientX - btn1.offsetLeft +'px';
+                      wave.style.top = event.clientY - btn1.offsetTop + 'px';
+
+                      void btn1.offsetWidth;
+                      btn1.classList.add(className);
+                    }
+
+
+
+
+                }
+
+
+
+            }
         }
     }
 })
-export let qinput = $("QcomInput")
+export let material = $("QcomMaterial")
+
+// globalcss({
+//     '.input':{
+
+//     }
+// })
 
 export let globalcss = (val)  =>{
     for(let i in range(len(Object.keys(val)))){
         let _store_1 = '{"'+String(Object.keys(val)[i]+'":'+JSON.stringify(Object.values(val)[i]))+'}'
         _store_1 = JSON.parse(_store_1)
-        style.sheet.insertRule(makemycss(_store_1))
+        _style.sheet.insertRule(makemycss(_store_1))
     }
-    // style.sheet.insertRule(makemycss(val))
+    // _style.sheet.insertRule(makemycss(val))
 }
 // globalcss({
 //     '*':{
@@ -2492,7 +2733,7 @@ export let globalcss = (val)  =>{
 //     }
 // })
 
-style.sheet.insertRule(`
+_style.sheet.insertRule(`
 qcom-textarea{
     display: inline-block;
     width: 100%;
@@ -2711,12 +2952,12 @@ export let changetable = () =>
 
 
 
-// style.sheet.insertRule(`qcom-view{background:red,boxShadow:-5px -5px 10px #fff,
+// _style.sheet.insertRule(`qcom-view{background:red,boxShadow:-5px -5px 10px #fff,
 //                 5px 5px 10px #bbb,
 //                 0px 0px 0px #fff inset,
 //                 0px 0px 0px #bbb inset}`)
 
-style.sheet.insertRule(`
+_style.sheet.insertRule(`
 #qcomAlert{
     position: fixed;
     top: 10;
@@ -2728,9 +2969,9 @@ style.sheet.insertRule(`
     text-align:center
 }
 `)
-style.sheet.insertRule(`
+_style.sheet.insertRule(`
 body{font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"`)
-style.sheet.insertRule(`
+_style.sheet.insertRule(`
 nav{
     margin:-8px;
 -ms-flex-flow: row nowrap;
@@ -2772,26 +3013,26 @@ else{
 function bigtable()
 {
 
-style.sheet.insertRule(`thead {
+_style.sheet.insertRule(`thead {
     color: rgba(0,0,0,0.6);
 }`)
-style.sheet.insertRule(`thead {
+_style.sheet.insertRule(`thead {
     display: table-header-group;
     vertical-align: middle;
     border-color: inherit;
 }`)
-style.sheet.insertRule(`tr {
+_style.sheet.insertRule(`tr {
     border-bottom: 1px solid rgba(0,0,0,0.12);
 }`)
-style.sheet.insertRule(`tr {
+_style.sheet.insertRule(`tr {
     display: table-row;
     vertical-align: inherit;
     border-color: inherit;
 }`)
-style.sheet.insertRule(`td, th {
+_style.sheet.insertRule(`td, th {
     padding: 15px 10px;
 }`)
-style.sheet.insertRule(`td, th {
+_style.sheet.insertRule(`td, th {
     padding: 15px 5px;
     display: table-cell;
     text-align: left;
@@ -2804,7 +3045,7 @@ style.sheet.insertRule(`td, th {
 function smtable()
 {
 
-style.sheet.insertRule(`
+_style.sheet.insertRule(`
     table {
         width: 100%;
         border-collapse: collapse;
@@ -2813,7 +3054,7 @@ style.sheet.insertRule(`
         position: relative;
 
     }`)
-    // style.sheet.insertRule(`
+    // _style.sheet.insertRule(`
     // table {
     //     width: 100%;
     //     display: table;
@@ -2822,53 +3063,53 @@ style.sheet.insertRule(`
     //     border: none;
     // }`);
 
-    style.sheet.insertRule(`table td:empty:before {
+    _style.sheet.insertRule(`table td:empty:before {
         content: ''
     }`)
-    style.sheet.insertRule(`table th,
+    _style.sheet.insertRule(`table th,
     table td {
         margin: 0;
         vertical-align: top
     }`)
-    style.sheet.insertRule(`table th {
+    _style.sheet.insertRule(`table th {
         text-align: left
     }`)
-    style.sheet.insertRule(`table thead {
+    _style.sheet.insertRule(`table thead {
         display: block;
         float: left
     }`)
-    style.sheet.insertRule(`table thead tr {
+    _style.sheet.insertRule(`table thead tr {
         display: block;
         padding: 0 10px 0 0
     }`)
-    style.sheet.insertRule(`table thead tr th::before {
+    _style.sheet.insertRule(`table thead tr th::before {
         content: ''
     }`)
-    style.sheet.insertRule(`table tbody {
+    _style.sheet.insertRule(`table tbody {
         display: block;
         width: auto;
         position: relative;
         overflow-x: auto;
         white-space: nowrap
     }`)
-    style.sheet.insertRule(`table tbody tr {
+    _style.sheet.insertRule(`table tbody tr {
         display: inline-block;
         vertical-align: top
     }`)
-    style.sheet.insertRule(`table th {
+    _style.sheet.insertRule(`table th {
         display: block;
         text-align: right
     }`)
-    style.sheet.insertRule(`table td {
+    _style.sheet.insertRule(`table td {
         display: block;
         min-height: 1.25em;
         text-align: left
     }`)
-    style.sheet.insertRule(`table tr {
+    _style.sheet.insertRule(`table tr {
         border-bottom: none;
         padding: 0 10px
     }`)
-    style.sheet.insertRule(`table thead {
+    _style.sheet.insertRule(`table thead {
         border: 0;
         border-right: 1px solid rgba(0, 0, 0, 0.12)
     }`)
@@ -2960,35 +3201,35 @@ new Qcom ({
     // noOfCols:0,
     created:()=>
         {
-                if((this.getAttribute('lg') == undefined)&&(this.getAttribute('md') == undefined)&&(this.getAttribute('sm') == undefined)){
-                    this.setAttribute('sm','12')
+                if((this.getAttribute('l') == undefined)&&(this.getAttribute('m') == undefined)&&(this.getAttribute('s') == undefined)){
+                    this.setAttribute('s','12')
                     let no_of_cols =this.parentElement.childElementCount
-                    this.setAttribute('md',12/no_of_cols)
-                    this.setAttribute('lg',12/no_of_cols)
+                    this.setAttribute('m',12/no_of_cols)
+                    this.setAttribute('l',12/no_of_cols)
                 }
                 // hold.noOfCols = this.parentElement.childElementCount
                 if(window.matchMedia("(min-width: 768px)").matches == true){
-                    this.lg(window.matchMedia("(min-width: 768px)"))
+                    this.l(window.matchMedia("(min-width: 768px)"))
                 }
                 else if(window.matchMedia("(max-width: 768px)").matches == true){
-                 this.md(window.matchMedia("(max-width: 768px)"))
+                 this.m(window.matchMedia("(max-width: 768px)"))
                 }else window.matchMedia("(max-width: 500px)")
                 {
-                    this.sm(window.matchMedia("(max-width: 500px)"))
+                    this.s(window.matchMedia("(max-width: 500px)"))
                 }
         },
         methods:{
-            lg:(lg)=>
+            l:(l)=>
             {
-                var md = window.matchMedia("(max-width: 768px)")
-                md.addListener(this.md)
+                var m = window.matchMedia("(max-width: 768px)")
+                m.addListener(this.m)
 
-                var sm = window.matchMedia("(max-width: 500px)")
-                sm.addListener(this.sm)
+                var s = window.matchMedia("(max-width: 500px)")
+                s.addListener(this.s)
 
-                if(lg.matches == true){
+                if(l.matches == true){
                     let one = 96/12
-                    let sizeOfCol = one*this.getAttribute('lg')
+                    let sizeOfCol = one*this.getAttribute('l')
                     this.style.position= 'relative';
                     // this.style.width= '100%';
                     this.style.paddingRight= '1%';
@@ -2997,17 +3238,17 @@ new Qcom ({
                     this.style.flex = '0 0 '+sizeOfCol+'%'
                 }
             },
-            md:(md)=>
+            m:(m)=>
             {
-                var sm = window.matchMedia("(max-width: 500px)")
-                sm.addListener(this.sm)
+                var s = window.matchMedia("(max-width: 500px)")
+                s.addListener(this.s)
 
-                var lg = window.matchMedia("(min-width: 768px)")
-                lg.addListener(this.lg)
+                var l = window.matchMedia("(min-width: 768px)")
+                l.addListener(this.l)
 
-                if(md.matches == true){
+                if(m.matches == true){
                     let one = 96/12
-                    let sizeOfCol = one*this.getAttribute('md')
+                    let sizeOfCol = one*this.getAttribute('m')
                     this.style.position= 'relative';
                     // this.style.width= '100%';
                     this.style.paddingRight= '1%';
@@ -3016,15 +3257,15 @@ new Qcom ({
                     this.style.flex = '0 0 '+sizeOfCol+'%'
                 }
             },
-            sm:(sm)=>
+            s:(s)=>
             {
-                var md = window.matchMedia("(min-width: 500px)")
-                md.addListener(this.md)
-                var lg = window.matchMedia("(min-width: 768px)")
-                lg.addListener(this.lg)
-                if(sm.matches == true){
+                var m = window.matchMedia("(min-width: 500px)")
+                m.addListener(this.m)
+                var l = window.matchMedia("(min-width: 768px)")
+                l.addListener(this.l)
+                if(s.matches == true){
                     let one = 96/12
-                    let sizeOfCol = one*this.getAttribute('sm')
+                    let sizeOfCol = one*this.getAttribute('s')
                     this.style.position= 'relative';
                     this.style.width= '100%';
                     this.style.paddingRight= '1%';
@@ -3474,16 +3715,21 @@ globalcss({'.mt1':{marginTop:'0.25rem'},'.mb1':{marginBottom:'0.25rem'},'.ml1':{
 
 </ul>
 */}
+
 $({
+
     name:'HamburgerMenu',
     // type:'shadow',
-    css:{ '.drawer .content .header': { 'height': '144px', 'background': '#fb8c00', 'position': 'relative' }, '.drawer .content .header .avatar': { 'background-image': 'url()', 'height': '64px', 'width': '64px', 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'border-radius': '100%', 'position': 'absolute', 'left': '16px', 'top': '16px', }, '.drawer .content .header .text': { 'height': '56px', 'position': 'absolute', 'bottom': '0', 'left': '0', 'width': '100%', 'box-sizing': 'border-box', 'padding': '8px 0', 'color': 'white', }, '.drawer .content .header .text .field': { 'padding-left': '16px', 'font-size': '14px', }, '.drawer .content .header .text .field.name': { 'font-weight': 'bold', }, '.drawer .content .header .text .field.info': { 'margin-top': '4px', }, '.drawer .content ul.menu': { 'padding': '8px 0', 'list-style': 'none', 'margin': '0', }, '.drawer .content ul.menu li.item': { 'display': 'block', 'font-size': '14px', 'font-weight': 'bold', 'height': '48px', 'line-height': '48px', 'padding-left': '72px', 'color': 'rgba(0, 0, 0, 0.87)', 'position': 'relative', }, '.drawer .content ul.menu li.item.subheader': { 'color': 'rgba(0, 0, 0, 0.54)', 'padding-left': '16px', 'margin-top': '8px', ' border-top': '1px solid rgba(0, 0, 0, 0.12)', }, '.drawer .content ul.menu li.item.subheader:after': { 'content': 'none', }, '.drawer .content ul.menu li.item:after': { 'content': "", 'background-image': "url('https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_brightness_high_black_24px.svg')", 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'height': '24px', 'width': '24px', 'position': 'absolute', 'left': '16px', 'top': '12px', 'opacity': '0.54' }, '.drawer .content ul.menu li.item:active': { 'background': 'rgba(0, 0, 0, 0.12)', }, '.rx_noselect': { '-webkit-touch-callout': 'none', '-webkit-user-select': 'none', '-khtml-user-select': 'none', '-moz-user-select': 'none', '-ms-user-select': 'none', 'user-select': 'none', }, '.drawer_bg': { 'position': 'fixed', 'background': 'rgba(0, 0, 0, 0.5)', 'top': '0', 'left': '0', 'right': "0", 'bottom': "0", 'width': '100%', 'height': '100%', 'z-index': '4', 'opacity': '0.001', '-webkit-transform': 'translateZ(0)', '-moz-transform': 'translateZ(0)', '-ms-transform': 'translateZ(0)', '-o-transform': 'translateZ(0)', 'transform': 'translateZ(0)', 'visibility': 'hidden', }, '.drawer': { 'max-width': '320px', 'width': '75%', 'height': '100%', 'left': '0px', 'top': '0', 'bottom': '0', '-webkit-transform': 'translateX(-100%)', '-moz-transform': 'translateX(-100%)', '-ms-transform':' translateX(-100%)', '-o-transform': 'translateX(-100%)', 'transform': 'translateX(-100%)', 'background': 'white', 'position': 'fixed', 'z-index': '5', 'opacity': '0.001', '-webkit-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-moz-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-ms-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-o-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4),', 'box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', }, '.drawer .label': { 'position': 'absolute', 'top': '56px', 'bottom': '0', 'width': '32px', 'right': '-32px', }, '.drawer .antiSelect': { 'position': 'absolute', 'top': '0', 'left': '0', 'height': '100%', 'width': '100%', 'visibility': 'hidden', }, '.rx_icon .ic': { 'position': 'absolute', 'width': '24px', 'height': '24px', }, '.rx_icon .ic .line': { 'position': 'absolute', 'left': '3px', 'right': '3px', 'height': '2px', 'background': 'white', 'outline': '1px solid transparent', }, '.rx_icon .ic .line.one': { 'top': '6px', '-webkit-transform-origin': 'right bottom', '-moz-transform-origin': 'right bottom', '-ms-transform-origin': 'right bottom', '-o-transform-origin': 'right bottom', 'transform-origin': 'right bottom', }, '.rx_icon .ic .line.two': { 'top': '11px' }, '.rx_icon .ic .line.thr': { '-webkit-transform-origin': 'right top', '-moz-transform-origin': 'right top', '-ms-transform-origin': 'right top', '-o-transform-origin': 'right top', 'transform-origin': 'right top', 'top': '16px' } },
+    css:{ '.drawer .content .header': { 'height': '144px', 'background':'', 'position': 'relative' }, '.drawer .content .header .avatar': { 'background-image': 'url()', 'height': '64px', 'width': '64px', 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'border-radius': '100%', 'position': 'absolute', 'left': '16px', 'top': '16px', }, '.drawer .content .header .text': { 'height': '56px', 'position': 'absolute', 'bottom': '0', 'left': '0', 'width': '100%', 'box-sizing': 'border-box', 'padding': '8px 0', 'color': 'white', }, '.drawer .content .header .text .field': { 'padding-left': '16px', 'font-size': '14px', }, '.drawer .content .header .text .field.name': { 'font-weight': 'bold', }, '.drawer .content .header .text .field.info': { 'margin-top': '4px', }, '.drawer .content ul.menu': { 'padding': '8px 0', 'list-style': 'none', 'margin': '0', }, '.drawer .content ul.menu li.item': { 'display': 'block', 'font-size': '14px', 'font-weight': 'bold', 'height': '48px', 'line-height': '48px', 'padding-left': '72px', 'color': 'rgba(0, 0, 0, 0.87)', 'position': 'relative', }, '.drawer .content ul.menu li.item.subheader': { 'color': 'rgba(0, 0, 0, 0.54)', 'padding-left': '16px', 'margin-top': '8px', ' border-top': '1px solid rgba(0, 0, 0, 0.12)', }, '.drawer .content ul.menu li.item.subheader:after': { 'content': 'none', }, '.drawer .content ul.menu li.item:after': { 'content': "", 'background-image': "url('https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_brightness_high_black_24px.svg')", 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'height': '24px', 'width': '24px', 'position': 'absolute', 'left': '16px', 'top': '12px', 'opacity': '0.54' }, '.drawer .content ul.menu li.item:active': { 'background': 'rgba(0, 0, 0, 0.12)', }, '.rx_noselect': { '-webkit-touch-callout': 'none', '-webkit-user-select': 'none', '-khtml-user-select': 'none', '-moz-user-select': 'none', '-ms-user-select': 'none', 'user-select': 'none', }, '.drawer_bg': { 'position': 'fixed', 'background': 'rgba(0, 0, 0, 0.5)', 'top': '0', 'left': '0', 'right': "0", 'bottom': "0", 'width': '100%', 'height': '100%', 'z-index': '4', 'opacity': '0.001', '-webkit-transform': 'translateZ(0)', '-moz-transform': 'translateZ(0)', '-ms-transform': 'translateZ(0)', '-o-transform': 'translateZ(0)', 'transform': 'translateZ(0)', 'visibility': 'hidden', }, '.drawer': { 'max-width': '320px', 'width': '75%', 'height': '100%', 'left': '0px', 'top': '0', 'bottom': '0', '-webkit-transform': 'translateX(-100%)', '-moz-transform': 'translateX(-100%)', '-ms-transform':' translateX(-100%)', '-o-transform': 'translateX(-100%)', 'transform': 'translateX(-100%)', 'background': 'white', 'position': 'fixed', 'z-index': '5', 'opacity': '0.001', '-webkit-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-moz-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-ms-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-o-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4),', 'box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', }, '.drawer .label': { 'position': 'absolute', 'top': '56px', 'bottom': '0', 'width': '32px', 'right': '-32px', }, '.drawer .antiSelect': { 'position': 'absolute', 'top': '0', 'left': '0', 'height': '100%', 'width': '100%', 'visibility': 'hidden', }, '.rx_icon .ic': { 'position': 'absolute', 'width': '24px', 'height': '24px', }, '.rx_icon .ic .line': { 'position': 'absolute', 'left': '3px', 'right': '3px', 'height': '2px', 'background': 'white', 'outline': '1px solid transparent', }, '.rx_icon .ic .line.one': { 'top': '6px', '-webkit-transform-origin': 'right bottom', '-moz-transform-origin': 'right bottom', '-ms-transform-origin': 'right bottom', '-o-transform-origin': 'right bottom', 'transform-origin': 'right bottom', }, '.rx_icon .ic .line.two': { 'top': '11px' }, '.rx_icon .ic .line.thr': { '-webkit-transform-origin': 'right top', '-moz-transform-origin': 'right top', '-ms-transform-origin': 'right top', '-o-transform-origin': 'right top', 'transform-origin': 'right top', 'top': '16px' } },
     template:()=>div(
         btn({class:"rx_icon",id:"rx_icon"}),
     div({class:'drawer',id:'drawer'},
-    div({class:'content mt12'},this.innerHTML))),
+    div({class:'content'},this.innerHTML))),
     code:{
         onload:()=>{
+            globalcss({
+                '.drawer .content .header': {'background':theme.background}
+            })
             var drawer,
                 drawerElem,
                 iconElem;
@@ -3539,6 +3785,3 @@ $({
 })
 
 export let hamburger_menu = $('HamburgerMenu')
-
-
-
