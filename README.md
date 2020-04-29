@@ -320,14 +320,10 @@ export let QcomTwo ={
                 td('Email'),
                 td('Password')
             ),
-            loop({
-                data:this.data.items,
-                html:tr(
-                    td(key('name')),
-                    td(key('email')),
-                    td(key('password'))
-                )
-            })
+            this.data.items.map(item =>
+                    tr(td(item.name),
+                        td(item.email),
+                        td(item.password)))
         ))
     ),
     code:{
