@@ -12,6 +12,13 @@
 ```bash
 npm install @qcom.io/qcom
 ```
+### Or
+#### CLI Installation for Quick Start
+
+```bash
+npm install -g @qcom.io/qcom-cli
+qcom --install
+```
 
 ### Or
 #### (Use following code to your html file)
@@ -303,11 +310,12 @@ export let QcomTwo ={
     },
     template:()=>row(
         col(form(
-            h1('Registration'),
-            qinput(input({id:'name',class:'mb6',placeholder:'Name'})),
-            qinput(input({id:'email',class:'mb6',placeholder:'Email'})),
-            qinput(input({id:'password',class:'mb6',placeholder:'Password'})),
-            right(btn({click:'QcomTwo.post()',is:'md'},'Submit'))
+            material(
+                h1('Registration'),
+                input({id:'name',class:'mb6',placeholder:'Name'}),
+                input({id:'email',class:'mb6',placeholder:'Email'}),
+                input({id:'password',class:'mb6',placeholder:'Password'}),
+                right(btn({click:'QcomTwo.post()',is:'md'},'Submit')))
         )),
         col(table(
             tr(
@@ -347,7 +355,7 @@ export let QcomError = {
 | btn({is:''})                 	| is:'sm'             	| is:'md'            	| is:'lg'            	| is:'block'                 	| is:'link'         	|
 |------------------------------	|---------------------	|--------------------	|--------------------	|----------------------------	|-------------------	|
 | center()                     	| left()              	|right()      	        | justify()          	| container()                	| row()             	|
-| col({sm:'3',md:'6',lg:'12'}) 	| div()               	| p()                	| pre()              	| h1()                       	| h2()              	|
+| col(is:'12-6-6') 	| div()               	| p()                	| pre()              	| h1()                       	| h2()              	|
 | h3()                         	| h4()                	| h5()               	| h6()               	| head()                     	| title()           	|
 | body()                       	| ul()                	| ol()               	| li()               	| table()                    	| thead()           	|
 | tbody()                      	| th()                	| tr()               	| td()               	| header()                   	| footer()          	|
@@ -357,7 +365,7 @@ export let QcomError = {
 | change(id,html)     	        | list([])         	    | color.color_name   	|                    	| find()                      	|                   	|
 | click:'name.function()' 	    | rev(str)       	    | random([])         	| random_keys([])    	| random_values([])          	| String.hash()     	|
 | qcom.get(url)              	| qcom.post(url,{}) 	| qcom.put(url,{}) 	    | qcom.delete(url) 	    | await import_module()    	    | camelCaseToDash() 	|
-| dashToCamelCase()            	| dashToPascalCase()  	| isFunction()       	| key()            	    | loop({data:[],html:div()}) 	| when().then()     	|
+| dashToCamelCase()            	| dashToPascalCase()  	| isFunction()       	|             	    | 
 
 
 ## License

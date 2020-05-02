@@ -598,7 +598,7 @@ export let call = (val) =>{
   }
   export let go = (...val) =>{
     //   console.log(val)
-console.log(val[0])    // return 1
+// console.log(val[0])    // return 1
   }
 
 window.onload = function () {
@@ -1239,7 +1239,7 @@ export let makeMyFunction = (tag) =>
 
                 }else{
                     if(typeof val[i] == 'undefined'){
-                        console.log(val[i])
+                        // console.log(val[i])
                         // eval(val[i])
                     }
                     else{
@@ -1292,7 +1292,7 @@ export let makeMyFunctionSingle = (tag) =>
 
                 }else{
                     if(typeof val[i] == 'undefined'){
-                        console.log(val[i])
+                        // console.log(val[i])
                     }
                     else{
                         temp += val[i]
@@ -1549,7 +1549,7 @@ export var find = (function () {
 	 */
 	Constructor.prototype.ajax = function (url) {
 		// Do some XHR/Fetch thing here
-		console.log(url);
+		// console.log(url);
 	};
 
 	/**
@@ -1829,7 +1829,7 @@ export class Mongo{
             // console.log("online",$$('result'));
            } else {
          result = $$('result')
-            console.log("offline",result);
+            // console.log("offline",result);
            }
         // console.log(result)
         return result; // parses JSON response into native JavaScript objects
@@ -1855,7 +1855,7 @@ export class Mongo{
     async findById(data){
         let findresult = []
         if(navigator.onLine){
-        console.log('online')
+        // console.log('online')
         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findById', {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin
@@ -1870,18 +1870,18 @@ export class Mongo{
           body: JSON.stringify({id:data}) // body data type must match "Content-Type" header
         });
         findresult = await response.json();
-        console.log(findresult)
+        // console.log(findresult)
     }else{
         findresult = $$('result').filter(item=>item._id == data)
         findresult = findresult[0]
-        console.log(findresult)
+        // console.log(findresult)
     }
         return findresult; // parses JSON response into native JavaScript objects
       }
     async findByIdAndDelete(data){
           let deletedresult
         if(navigator.onLine){
-            console.log('online')
+            // console.log('online')
         const response = await fetch(this.url+'/'+this.db+'/'+this.schema+'/findByIdAndDelete', {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin
@@ -1961,7 +1961,7 @@ export class Mongo{
         // data['_id'] = String(JSON.stringify(data).hash())
         newdata.push(data)
         $$('newdata',newdata)
-        console.log(newdata)
+        // console.log(newdata)
         result.push(data)
         $$('result',result)
         saveresult = 'offline'
@@ -2309,7 +2309,7 @@ export class Qcom  {
                 })
                __test0 = __test1
                 hold.router.links = __test0
-                console.log(hold.router.links)
+                // console.log(hold.router.links)
 
                 let __newArray = []
                 let __doubleChecker = []
