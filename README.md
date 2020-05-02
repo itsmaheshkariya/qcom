@@ -300,7 +300,7 @@ export let QcomOne = {
     },
     template:()=>div(h1('Page One'),
             this.data.items.map(item =>
-                    div(item.name))
+                    div(item.name)))
 }
 
 export let QcomTwo ={

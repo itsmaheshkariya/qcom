@@ -2503,16 +2503,16 @@ export class Qcom  {
                             }
                         let _one,_two
                         let route = myFirstRouter.routes.filter(r=>{
-                            if(r.type == 'dynamic'){
+                            // if(r.type == 'dynamic'){
                                     _one = r.path.split('/')
                                     _two = currentPath.split('/')
                                     _one = _one.filter(item=>item!="")
                                     _two = _two.filter(item=>item!="")
                                  return check(_one,_two).response == "True"
-                            }else{
+                            // }else{
 
-                                return r.path == currentPath
-                            }
+                            //     return r.path == currentPath
+                            // }
 
 
                         })[0];
