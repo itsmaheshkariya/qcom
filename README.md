@@ -299,7 +299,7 @@ export let QcomOne = {
         ]
     },
     template:()=>div(h1('Page One'),
-            this.data.items.map(item =>
+            ()=>this.data.items.map(item =>
                     div(item.name)))
 }
 
@@ -323,7 +323,7 @@ export let QcomTwo ={
                 td('Email'),
                 td('Password')
             ),
-            this.data.items.map(item =>
+            ()=>this.data.items.map(item =>
                     tr(td(item.name),
                         td(item.email),
                         td(item.password)))
