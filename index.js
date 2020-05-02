@@ -1,7 +1,13 @@
 
 
 
-
+Object.defineProperties(Array.prototype, {
+    count: {
+        value: function(value) {
+            return this.filter(x => x==value).length;
+        }
+    }
+});
 function Drawer(drawerElem) {
     "use strict";
 
@@ -2035,15 +2041,16 @@ export let MakeClass = (classOf,attributes,hold) => {
         constructor(){
             super()
             if(hold.data){
-                this.data = hold.data;
+                //this.data = hold.data;
 
-                this.update = new Proxy(this.data, {
+                this.data = new Proxy(hold.data, {
                     set: function (target, key, value) {
-                        // console.log(`${key} set to ${value}`);
+                         //console.log(`${key} set to ${value}`);
+                        //console.log(this)
                         target[key] = value;
                         return true;
                     }
-                });
+                })
 
             }
 
@@ -2060,6 +2067,14 @@ export let MakeClass = (classOf,attributes,hold) => {
             }else if(hold.name){
                 hold.class = hold.name
                 this.class = hold.class;
+            }
+
+            if(hold.include){
+                this.include = hold.include
+                this.include.forEach(item=>{
+                     $(item)
+                    //console.log(item.split('.')[len(item.split('.'))-2])
+                })
             }
             // if(hold.css){
             //     this.css = hold.css
@@ -2122,12 +2137,17 @@ export let MakeClass = (classOf,attributes,hold) => {
                             // if(e.target.getAttribute('click').split('.')[0] == 'this'){
                             //     console.log(this)
                             // }
-                            if(e.target.getAttribute('click').split('.')[0]==hold.class){
-                                // console.log('this.'+e.target.getAttribute('click').split('.')[1])
-                               eval('this.'+e.target.getAttribute('click').split('.')[1])
+                            let __myAttributeIS = e.target.getAttribute('click')
+                            if(__myAttributeIS.split('.')[0].startsWith('Qcom')==false)
+                                {
+                                    __myAttributeIS = 'Qcom'+__myAttributeIS
+                                }
+                            if(__myAttributeIS.split('.')[0]==hold.class){
+                                // console.log('this.'+__myAttributeIS.split('.')[1])
+                               eval('this.'+__myAttributeIS.split('.')[1])
 
                             }
-                            // eval(e.target.getAttribute('click'))
+                            // eval(__myAttributeIS)
                         }catch(err) {
                         }
                     }else{
@@ -2151,6 +2171,14 @@ export let MakeClass = (classOf,attributes,hold) => {
         }
         child(val){
             return this.querySelector(camelCaseToDash(val.split('.')[0]))
+
+        }
+        params(val){
+            if(this.hasAttribute('__'+val) == true){
+                return decodeURIComponent(this.getAttribute('__'+val))
+            }else{
+                console.error(`Hey noobmaster ** `+val+` ** parameter is not here ok.`)
+            }
 
         }
         html(...val){
@@ -2246,16 +2274,74 @@ export class Qcom  {
                     this.attributes = []
                 }
                 if(hold.name){
+                    if(hold.name.startsWith('Qcom')==false)
+                    {
+                        hold.name = 'Qcom'+hold.name
+                        hold.class = 'Qcom'+hold.class
+                    }
                     hold.class = hold.name
                 }
                 if(hold.template){
                     this.template = hold.template
                 }
                 if(hold.class){
+                    hold.class = (len(camelCaseToDash(hold.class).split('-'))==1)==true?'Qcom'+hold.class:hold.class
                     let C1 = MakeClass(this.class,this.attributes,hold)
-                    customElements.define(String(camelCaseToDash(hold.class)),C1)
+                    try{ customElements.define(String(camelCaseToDash(hold.class)),C1) }catch(err){
+                         //console.error(`Failed to execute '$(...)' on 'QcomElementRegistry': the name "`+hold.class+`" has already been used with this registry`)
+                    }finally{}
+
             }
             if(hold.router){
+                let __test0 = hold.router.links
+                let __test1 = []
+                __test0.forEach(item=>{
+                    if(item.startsWith('/')){
+                        if(item.startsWith('/Qcom')==false){
+                            item = 'Qcom'+item.slice(1,len(item))
+                        }
+                    }else{
+                        if(item.startsWith('Qcom')==false){
+                            item = 'Qcom'+item
+                        }
+                    }
+                    __test1.push(item)
+                })
+               __test0 = __test1
+                hold.router.links = __test0
+                console.log(hold.router.links)
+
+                let __newArray = []
+                let __doubleChecker = []
+                __test0.forEach(item=>{
+                    if(item.includes(':')==true){
+                        if(item.startsWith('/')==false){
+                            item = '/'+item
+                            __newArray.push(item)
+                            __doubleChecker.push(item.split('/')[1])
+                        }else{
+                            __newArray.push(item)
+                            __doubleChecker.push(item.split('/')[1])
+                        }
+                    }else {
+                        if(item.startsWith('/')==true)
+                        {
+                            item = item.slice(1,len(item))
+                            __newArray.push(item)
+                            __doubleChecker.push(item.split('/')[0])
+                        }else{
+                           __newArray.push(item)
+                           __doubleChecker.push(item.split('/')[0])
+                        }
+                    }
+                })
+                __doubleChecker.forEach(item=>{
+                    if(__doubleChecker.count(item)>1){
+                        console.error('Dear Programmer Do not use same Component for multiple urls like you just did with '+item+' in router links understood ?')
+                    }
+                })
+                hold.router.links = __newArray
+
                 let view = ''
                 if(hold.router.view)
                 {
@@ -2273,7 +2359,6 @@ export class Qcom  {
                             for(var i=0;i<a.length;i++)
                             if(a[i]!=b[i]){
                                 if(a[i].startsWith(":") == true){
-
                                     json[a[i]] = b[i]
                                 }else{
                                     return "False"
@@ -2285,6 +2370,11 @@ export class Qcom  {
                     }
                 function navigate(event){
                     let route = event.target.getAttribute('route')
+                    let __temproute = route
+                    if(route.startsWith('/Qcom')==false){
+                        route = '/Qcom'+route.slice(1,len(route))
+                        console.log(route)
+                    }
                     // let route = event.target.attributes[0].value;
                     let routeInfo = myFirstRouter.routes.filter((r)=>{
                         if(r.type == 'dynamic')
@@ -2307,13 +2397,38 @@ export class Qcom  {
                                 }
                     }else{
                         if(routeInfo.type == 'dynamic'){
-                            window.history.pushState({},'',route)
-                            view.innerHTML = 'You have clicked the '+routeInfo.name+' Route With '+route.split('/')[2]
+                            window.history.pushState({},'',__temproute)
+                            let _five = route.split('/').filter(item=>item!="")
+                            let _four = routeInfo.name.split('/').filter(item=>item!="")
+                            // if(route.startsWith('/')){
+                            //     if(route.startsWith('/Qcom')==false){
+                            //         route = '/Qcom'+route.slice(4,len(route))
+                            //     }
+                            // }else{
+                            //     if(route.startsWith('Qcom')==false){
+                            //         route = '/Qcom'+route.slice(4,len(route))
+                            //     }
+                            // }
+                            // console.log(route)
+                            let __myNewJson = {}
+                            for(let i in range(len(_four))){
+                                if(i!=0)
+                                __myNewJson['__'+_four[i].split(':')[1]] = _five[i]
+                            }
+                            let __myLink = _four[0]
+                            if(_four[0].startsWith('Qcom')==false)
+                                {
+                                     __myLink= 'Qcom'+_four[0]
+                                }else{
+                                     __myLink= _four[0]
+                                }
+                            view.innerHTML = $(__myLink)(__myNewJson)
                         }else{
-                            window.history.pushState({},'',routeInfo.path)
+                            //window.history.pushState({},'',routeInfo.path)
+                            window.history.pushState({},'',__temproute)
+
                             let demo = $(routeInfo.name)
                             view.innerHTML = demo()
-                            // view.innerHTML = 'You have clicked the '+routeInfo.name+' route'
                         }
 
                     }
@@ -2344,6 +2459,7 @@ export class Qcom  {
                             route.split("/:").length>1?newobj.type='dynamic':newobj.type='static'
                             newobj.name = route
                             if(route.split("/:").length>1){
+
                                 newobj.path = route
                             }else{
                                 if(route == 'Root' || route == 'Index' || route == 'index' || route=='index'){
@@ -2368,11 +2484,11 @@ export class Qcom  {
                 }
 
                 let myFirstRouter = new Router('myFirstRouter',hold.router.links)
+                //console.log(hold.router.links)
                     let currentPath = window.location.pathname;
 
                     if(currentPath == '/'){
                     let demo;
-                    // console.log('root')
                     if(hold.router.root){
                         demo = $(hold.router.root)
                     }else{
@@ -2381,11 +2497,18 @@ export class Qcom  {
                         view.innerHTML = demo()
                         // view.innerHTML = hold.router.root
                     }else{
-
-
+                            if(currentPath.startsWith('/Qcom')==false){
+                                currentPath = '/Qcom'+currentPath.slice(1,len(currentPath))
+                                //console.log(currentPath)
+                            }
+                        let _one,_two
                         let route = myFirstRouter.routes.filter(r=>{
                             if(r.type == 'dynamic'){
-                                 return check(r.path.split('/'),currentPath.split('/')).response == "True"
+                                    _one = r.path.split('/')
+                                    _two = currentPath.split('/')
+                                    _one = _one.filter(item=>item!="")
+                                    _two = _two.filter(item=>item!="")
+                                 return check(_one,_two).response == "True"
                             }else{
 
                                 return r.path == currentPath
@@ -2394,14 +2517,48 @@ export class Qcom  {
 
                         })[0];
                         if(route){
-                            if(check(route.path.split('/'),currentPath.split('/')).response == "True" && check(route.path.split('/'),currentPath.split('/')).json[":id"] != undefined){
+                           console.log(_two)
+                            // if(router.path.startsWith('/')){
+                            //     if(route.path.startsWith('/Qcom')==false){
+                            //         route.path = '/Qcom'
+                            //     }
+                            // }else{
+                            //     if(route.path.startsWith('Qcom')==false)
+                            // }
+                            // console.log(_two[0])
+                            // if(_two[0].startsWith('/')){
+                            //     if(_two[0].startsWith('/Qcom')==false){
+                            //         _two[0] = '/Qcom'+_two[0].slice(4,len(_two[0]))
+                            //     }
+                            // }else{
+                            //     if(_two[0].startsWith('Qcom')==false){
+                            //         _two[0] = '/Qcom'+_two[0].slice(4,len(_two[0]))
+                            //     }
+                            // }
+                            // console.log(_two[0])
 
-                                view.innerHTML = `You are on the `+ route.name + ' Path With '+ check(route.path.split('/'),currentPath.split('/')).json[":id"]
+                            if(check(_one,_two).response == "True" && check(_one,_two).json[":id"] != undefined){
+                                let __myNewJson = {}
+                                for(let i in range(len(_one))){
+                                    if(i!=0)
+                                    __myNewJson['__'+_one[i].split(':')[1]] = _two[i]
+                                }
+
+                                let __myLink = _two[0]
+                                if(_two[0].startsWith('Qcom')==false)
+                                    {
+                                        __myLink= 'Qcom'+_two[0]
+                                    }else{
+                                        __myLink= _two[0]
+                                    }
+                                view.innerHTML = $(__myLink)(__myNewJson)
+
+                                //view.innerHTML = $(_two[0])(__myNewJson)
 
                             }else{
 
-                                let demo = $(route.name)
-                                view.innerHTML = demo()
+                                let _route_page = $(route.name)
+                                view.innerHTML = _route_page()
                             }
 
                         }else{
@@ -3201,6 +3358,12 @@ new Qcom ({
     // noOfCols:0,
     created:()=>
         {
+                if(this.hasAttribute('is')===true){
+                    let __holdColsSize = this.getAttribute('is').split('-')
+                    this.setAttribute('s',__holdColsSize[0])
+                    this.setAttribute('m',__holdColsSize[1])
+                    this.setAttribute('l',__holdColsSize[2])
+                }
                 if((this.getAttribute('l') == undefined)&&(this.getAttribute('m') == undefined)&&(this.getAttribute('s') == undefined)){
                     this.setAttribute('s','12')
                     let no_of_cols =this.parentElement.childElementCount
@@ -3441,29 +3604,31 @@ export let btn = $("QcomButton")
 
 $({
     class:'QcomAppBar',
+    code:{
+        onload:()=>{
+            let title = this.getAttribute('title') == null?'':this.getAttribute('title')
+            this.design({
+                'div':{
+                    display:'flex',
+                    flexFlow:'row wrap',
+                    backgroundColor: theme.background,
+                    color: theme.color,
+                    maxHeight: '50px',
+                    maxHeight: '50px',
+                    fontSize:'1.4rem',
+                    padding: '10px',
+                    zIndex : '2',
+                    marginLeft:'-7px',
+                    marginBottom:'50px',
+                    position: 'fixed',
+                    top: 0,
+                    width: '99%',
+                    boxShadow: "0 2px 5px 0 rgba(0, 0, 0, 0.26)"
+                }
+            })
+            this.html(div((title+slot())))
 
-    created:()=>{
-        this.design(
-            {'div':{
-                display:'flex',
-                flexFlow:'row wrap',
-                backgroundColor: theme.background,
-                color: theme.color,
-                maxHeight: '50px',
-                maxHeight: '50px',
-                fontSize:'1.4rem',
-                padding: '10px',
-                zIndex : '5',
-                marginLeft:'-7px',
-                marginBottom:'50px',
-                position: 'fixed',
-                top: 0,
-                width: '99%',
-                boxShadow: "0 2px 5px 0 rgba(0, 0, 0, 0.26)"
-            }}
-        )
-        let title = this.getAttribute('title') == null?'':this.getAttribute('title')
-        this.html(div(slot()+title))
+        }
     },
     attributes:['title','actions','background']
 })
@@ -3718,13 +3883,20 @@ globalcss({'.mt1':{marginTop:'0.25rem'},'.mb1':{marginBottom:'0.25rem'},'.ml1':{
 
 $({
 
-    name:'HamburgerMenu',
+    name:'QcomHamburgerMenu',
     // type:'shadow',
-    css:{ '.drawer .content .header': { 'height': '144px', 'background':'', 'position': 'relative' }, '.drawer .content .header .avatar': { 'background-image': 'url()', 'height': '64px', 'width': '64px', 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'border-radius': '100%', 'position': 'absolute', 'left': '16px', 'top': '16px', }, '.drawer .content .header .text': { 'height': '56px', 'position': 'absolute', 'bottom': '0', 'left': '0', 'width': '100%', 'box-sizing': 'border-box', 'padding': '8px 0', 'color': 'white', }, '.drawer .content .header .text .field': { 'padding-left': '16px', 'font-size': '14px', }, '.drawer .content .header .text .field.name': { 'font-weight': 'bold', }, '.drawer .content .header .text .field.info': { 'margin-top': '4px', }, '.drawer .content ul.menu': { 'padding': '8px 0', 'list-style': 'none', 'margin': '0', }, '.drawer .content ul.menu li.item': { 'display': 'block', 'font-size': '14px', 'font-weight': 'bold', 'height': '48px', 'line-height': '48px', 'padding-left': '72px', 'color': 'rgba(0, 0, 0, 0.87)', 'position': 'relative', }, '.drawer .content ul.menu li.item.subheader': { 'color': 'rgba(0, 0, 0, 0.54)', 'padding-left': '16px', 'margin-top': '8px', ' border-top': '1px solid rgba(0, 0, 0, 0.12)', }, '.drawer .content ul.menu li.item.subheader:after': { 'content': 'none', }, '.drawer .content ul.menu li.item:after': { 'content': "", 'background-image': "url('https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_brightness_high_black_24px.svg')", 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'height': '24px', 'width': '24px', 'position': 'absolute', 'left': '16px', 'top': '12px', 'opacity': '0.54' }, '.drawer .content ul.menu li.item:active': { 'background': 'rgba(0, 0, 0, 0.12)', }, '.rx_noselect': { '-webkit-touch-callout': 'none', '-webkit-user-select': 'none', '-khtml-user-select': 'none', '-moz-user-select': 'none', '-ms-user-select': 'none', 'user-select': 'none', }, '.drawer_bg': { 'position': 'fixed', 'background': 'rgba(0, 0, 0, 0.5)', 'top': '0', 'left': '0', 'right': "0", 'bottom': "0", 'width': '100%', 'height': '100%', 'z-index': '4', 'opacity': '0.001', '-webkit-transform': 'translateZ(0)', '-moz-transform': 'translateZ(0)', '-ms-transform': 'translateZ(0)', '-o-transform': 'translateZ(0)', 'transform': 'translateZ(0)', 'visibility': 'hidden', }, '.drawer': { 'max-width': '320px', 'width': '75%', 'height': '100%', 'left': '0px', 'top': '0', 'bottom': '0', '-webkit-transform': 'translateX(-100%)', '-moz-transform': 'translateX(-100%)', '-ms-transform':' translateX(-100%)', '-o-transform': 'translateX(-100%)', 'transform': 'translateX(-100%)', 'background': 'white', 'position': 'fixed', 'z-index': '5', 'opacity': '0.001', '-webkit-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-moz-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-ms-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-o-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4),', 'box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', }, '.drawer .label': { 'position': 'absolute', 'top': '56px', 'bottom': '0', 'width': '32px', 'right': '-32px', }, '.drawer .antiSelect': { 'position': 'absolute', 'top': '0', 'left': '0', 'height': '100%', 'width': '100%', 'visibility': 'hidden', }, '.rx_icon .ic': { 'position': 'absolute', 'width': '24px', 'height': '24px', }, '.rx_icon .ic .line': { 'position': 'absolute', 'left': '3px', 'right': '3px', 'height': '2px', 'background': 'white', 'outline': '1px solid transparent', }, '.rx_icon .ic .line.one': { 'top': '6px', '-webkit-transform-origin': 'right bottom', '-moz-transform-origin': 'right bottom', '-ms-transform-origin': 'right bottom', '-o-transform-origin': 'right bottom', 'transform-origin': 'right bottom', }, '.rx_icon .ic .line.two': { 'top': '11px' }, '.rx_icon .ic .line.thr': { '-webkit-transform-origin': 'right top', '-moz-transform-origin': 'right top', '-ms-transform-origin': 'right top', '-o-transform-origin': 'right top', 'transform-origin': 'right top', 'top': '16px' } },
+    css:{ '.drawer .content .header': { 'height': '144px', 'background':'', 'position': 'relative' }, '.drawer .content .header .avatar': { 'background-image': 'url()', 'height': '64px', 'width': '64px', 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'border-radius': '100%', 'position': 'absolute', 'left': '16px', 'top': '16px', }, '.drawer .content .header .text': { 'height': '56px', 'position': 'absolute', 'bottom': '0', 'left': '0', 'width': '100%', 'box-sizing': 'border-box', 'padding': '8px 0', 'color': 'white', }, '.drawer .content .header .text .field': { 'padding-left': '16px', 'font-size': '14px', }, '.drawer .content .header .text .field.name': { 'font-weight': 'bold', }, '.drawer .content .header .text .field.info': { 'margin-top': '4px', }, '.drawer .content ul.menu': { 'padding': '8px 0', 'list-style': 'none', 'margin': '0', }, '.drawer .content ul.menu li.item': { 'display': 'block', 'font-size': '14px', 'font-weight': 'bold', 'height': '48px', 'line-height': '48px', 'padding-left': '72px', 'color': 'rgba(0, 0, 0, 0.87)', 'position': 'relative', }, '.drawer .content ul.menu li.item.subheader': { 'color': 'rgba(0, 0, 0, 0.54)', 'padding-left': '16px', 'margin-top': '8px', ' border-top': '1px solid rgba(0, 0, 0, 0.12)', }, '.drawer .content ul.menu li.item.subheader:after': { 'content': 'none', }, '.drawer .content ul.menu li.item:after': { 'content': "", 'background-image': "url('https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_brightness_high_black_24px.svg')", 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'height': '24px', 'width': '24px', 'position': 'absolute', 'left': '16px', 'top': '12px', 'opacity': '0.54' }, '.drawer .content ul.menu li.item:active': { 'background': 'rgba(0, 0, 0, 0.12)', }, '.rx_noselect': { '-webkit-touch-callout': 'none', '-webkit-user-select': 'none', '-khtml-user-select': 'none', '-moz-user-select': 'none', '-ms-user-select': 'none', 'user-select': 'none', }, '.drawer_bg': { 'position': 'fixed', 'background': 'rgba(0, 0, 0, 0.5)', 'top': '0', 'left': '0', 'right': "0", 'bottom': "0", 'width': '100%', 'height': '100%', 'z-index': '4', 'opacity': '0.001', '-webkit-transform': 'translateZ(0)', '-moz-transform': 'translateZ(0)', '-ms-transform': 'translateZ(0)', '-o-transform': 'translateZ(0)', 'transform': 'translateZ(0)', 'visibility': 'hidden', }, '.drawer': { 'max-width': '320px', 'width': '75%', 'height': '100%', 'left': '0px', 'top': '0', 'bottom': '0', '-webkit-transform': 'translateX(-100%)', '-moz-transform': 'translateX(-100%)', '-ms-transform':' translateX(-100%)', '-o-transform': 'translateX(-100%)', 'transform': 'translateX(-100%)', 'background': 'white', 'position': 'fixed', 'z-index': '5', 'opacity': '0.001', '-webkit-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-moz-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-ms-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-o-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4),', 'box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', }, '.drawer .label': { 'position': 'absolute', 'top': '56px', 'bottom': '0', 'width': '32px', 'right': '-32px', }, '.drawer .antiSelect': { 'position': 'absolute', 'top': '0', 'left': '0', 'height': '100%', 'width': '100%', 'visibility': 'hidden', }, '.rx_icon .ic': {'position': 'absolute', 'width': '24px', 'height': '24px', }, '.rx_icon .ic .line': { 'position': 'absolute', 'left': '3px', 'right': '3px', 'height': '2px', 'background': 'white', 'outline': '1px solid transparent', }, '.rx_icon .ic .line.one': { 'top': '6px', '-webkit-transform-origin': 'right bottom', '-moz-transform-origin': 'right bottom', '-ms-transform-origin': 'right bottom', '-o-transform-origin': 'right bottom', 'transform-origin': 'right bottom', }, '.rx_icon .ic .line.two': { 'top': '11px' }, '.rx_icon .ic .line.thr': { '-webkit-transform-origin': 'right top', '-moz-transform-origin': 'right top', '-ms-transform-origin': 'right top', '-o-transform-origin': 'right top', 'transform-origin': 'right top', 'top': '16px' } },
     template:()=>div(
         btn({class:"rx_icon",id:"rx_icon"}),
     div({class:'drawer',id:'drawer'},
-    div({class:'content'},this.innerHTML))),
+    div({class:'content'}
+    // ,div({class:'header'},
+    //                         div({class:'avatar'}),
+    //                             div({class:"text"},
+    //                                 div({class:"field name"},'Demo Application'),
+    //                                 div({class:"field info"},'Demo Info')
+    //                             ))
+        ,this.innerHTML))),
     code:{
         onload:()=>{
             globalcss({
@@ -3784,4 +3956,11 @@ $({
     // }
 })
 
-export let hamburger_menu = $('HamburgerMenu')
+export let hamburger_menu = $('QcomHamburgerMenu')
+
+
+export let ele = (val)=>{
+    return (target)=>{
+      target.ele = val
+   }
+}
