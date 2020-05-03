@@ -3,8 +3,7 @@
 [![devDependency Status](https://david-dm.org/maheshkareeya/cli/dev-status.svg)](https://david-dm.org/maheshkareeya/cli#info=devDependencies)
 [![NPM version](https://badge.fury.io/js/%40qcom.io%2Fqcom.svg)](https://www.npmjs.com/package/@qcom.io/qcom)
 ![Downloads](https://img.shields.io/npm/dm/%40qcom.io%2Fqcom.svg?style=flat)
-
-
+![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/qcom.png)
 ### Javascript Framework
 
 #### Installation
@@ -14,17 +13,24 @@ npm install @qcom.io/qcom
 ```
 ### Or
 #### CLI Installation for Quick Start
-
 ```bash
 npm install -g @qcom.io/qcom-cli
 qcom --install
 ```
+### check url
+http://localhost:8080
 
 ### Or
 #### (Use following code to your html file)
 
-
-#### index.html (Hello World)
+```html
+<script type="module">
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
+  $() // Now check your Inspector of Browser He will guide you for further steps
+</script>
+```
+#### index.html
 ```html
 <qcom-hello-world></qcom-hello-world>
 
@@ -36,6 +42,14 @@ qcom --install
       template:()=>h1('Hello World')
   })
 </script>
+```
+
+## Rules 
+```html 
+<h1 class="head"  style = "color:red;  background-color:  yellow"    id="heading" > I am H1 </h1>
+```
+```js
+h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading' }, 'I am H1' )
 ```
 
 #### Functions
