@@ -15,7 +15,7 @@ npm install @qcom.io/qcom
 #### CLI Installation for Quick Start
 ```bash
 npm install -g @qcom.io/qcom-cli
-qcom --install
+qcom --install && npm start
 ```
 ### check url
 http://localhost:8080
@@ -125,7 +125,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
                             td('Name'),
                             td('Age')
                         ),
-            this.data.items.map(item =>
+            ()=>this.data.items.map(item =>
                     tr(
                         td(item.id),
                         td(item.name),
@@ -155,7 +155,7 @@ $({
                 td('Title'),
                 td('completed')
             ),
-            this.data.items.map(item =>
+            ()=>this.data.items.map(item =>
                     tr(
                         td(item.id),
                         td(item.title),
@@ -164,9 +164,9 @@ $({
         )
     ),
     code:{
-        updater:async ()=>{
+        onload:async ()=>{
             this.data.items = await qcom.get('https://jsonplaceholder.typicode.com/todos/')
-            this.html(this.template())
+            this.render()
         }
     }
 })
@@ -212,21 +212,21 @@ $({
 <qcom-main></qcom-main>
 <script type="module">
 import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
-    $({
+    let QcomOne = {
         name:'QcomOne',template:()=>div(
             h1('Page One')
         )
-    })
-    $({
+    }
+    let QcomTwo ={
         name:'QcomTwo',template:()=>div(
             h1('Page Two')
         )
-    })
-    $({
+    }
+    let QcomError = {
         name:'QcomError',template:()=>div(
             h1('404 Page')
         )
-    })
+    }
     $({
         name:'QcomMain',
         template:()=>div(
@@ -237,6 +237,7 @@ import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
                 ),
                 div({class:'mt12', id:'root'})
             ),
+       include:[QcomOne,QcomTwo,QcomError],
             router:{
                 root:'QcomOne',
                 view:'root',
@@ -247,10 +248,6 @@ import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
 </script>
 
 ```
-
-
-
-
 #### Complete Example (index.html)
 ```html
 <!DOCTYPE html>
