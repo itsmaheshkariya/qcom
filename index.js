@@ -1600,10 +1600,87 @@ export var find = (function () {
 
 })();
 
+let syntax = () =>{
+    console.warn('You need more practice I think. well you can copy pest following code.')
+    console.warn(`JS :      $({
+        name:'QcomApp',
+        template:()=>h1('Hello World')
+    })`)
+    console.warn(`HTML :    <qcom-app></qcom-app> // no need to write tag as well I'll do it 4 u ok check your output`)
+}
 
 export let $ = (val) => {
+    if(typeof val == 'object'){
+        new Qcom(val)
+        if(val.class == 'QcomApp' && val.template == undefined){
+            console.warn('Step1: ༼ つ ◕_◕ ༽つ template is required dude. check this out.')
+            console.warn(`JS :      $({
+                template:()=>div(h1('App'))
+            })`)
+        }else if(val.class == 'QcomApp' && val.template != undefined && val.router == undefined){
+            console.warn('Step2: you have to use router now if you want to or can proceed ok bro.')
+            console.warn(`JS :
+            let PageOne = {
+                name:'PageOne',
+                template:()=>h1('I am Page One')
+            }
+            let PageTwo = {
+                name:'PageTwo',
+                template:()=>h1('I am Page Two')
+            }
+            $({
+                template:()=>div(
+                        btn({route:'/PageOne',is:'md'},'PageOne'),
+                        btn({route:'/PageTwo',is:'md'},'PageTwo'),
+                        div({id:'router'})
+                    ),
+                    include:[
+                        PageOne,
+                        PageTwo
+                    ],
+                router:{
+                    error:'404',
+                    root:'PageOne',
+                    view:'router',
+                    links:['/PageOne','/PageTwo']
+                }
+            })`)
+            console.warn(`on server side :   npm init -y && npm i express -S && touch server.js && node server.js
+      server.js :    const express = require('express');express().use(express.static('.')).get('*',(req,res)=>res.sendFile(__dirname+'/index.html')).listen(8082)
+            `)
+        }if(val.class == 'QcomApp' && val.template != undefined && val.router != undefined){
+            console.info('In HTML:              <h1 class="head"  style = "color:red;  background-color:  yellow"    id="heading" > I am H1 </h1>')
+            console.info(`In QCOM:              h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading' }, 'I am H1' )`)
 
-    if(typeof val == 'object'){new Qcom(val)}else {return makeMyFunction(camelCaseToDash(val))}
+            //console.warn('well you can use Grid system')
+            // console.warn(`JS :     div(
+            //     row(
+            //         col({is:'12-6-6'},
+            //             div(p('Column 1'))
+            //         ),
+            //         col({is:'12-6-6'},
+            //             div(p('Column 2'))
+            //         )
+            //     )
+            // )
+            // `)
+        }
+    }else {
+        if(val == undefined)
+        {syntax()}else{
+            try{
+                if(val.startsWith('Qcom') != true){
+                    val = 'Qcom'+val
+                }
+                return makeMyFunction(camelCaseToDash(val))
+         }catch(e){
+            syntax()
+         }finally{}
+    }
+    }
+}
+if(document.querySelector('script').innerHTML.includes('$(')==false){
+syntax()
 }
 export let $router = (val) =>{
     $({
@@ -2261,7 +2338,7 @@ export class Qcom  {
                         theme.background = hold.theme.background
                         theme.hover = hold.theme.hover
                     }
-                    if(hold.class == undefined && hold.name == undefined){
+                    if((hold.class == undefined && hold.name == undefined)|| hold.name == 'QcomApp' || hold.class == 'QcomApp' || hold.name == 'App' || hold.class == 'App'){
                         hold.class = 'QcomApp'
                         var _bodytag = document.getElementsByTagName('BODY')[0];
                         var _qcomapp = document.createElement('qcom-app');
@@ -2351,6 +2428,7 @@ export class Qcom  {
                 }
                     function check(a,b)
                     {
+                        //console.log(a,b)
                         let json = []
                         if(a.length!=b.length)
                             return "False";
@@ -2373,7 +2451,7 @@ export class Qcom  {
                     let __temproute = route
                     if(route.startsWith('/Qcom')==false){
                         route = '/Qcom'+route.slice(1,len(route))
-                        console.log(route)
+                        //console.log(route)
                     }
                     // let route = event.target.attributes[0].value;
                     let routeInfo = myFirstRouter.routes.filter((r)=>{
@@ -2503,11 +2581,12 @@ export class Qcom  {
                             }
                         let _one,_two
                         let route = myFirstRouter.routes.filter(r=>{
-                            // if(r.type == 'dynamic'){
+                            // if(r.type == 'dynamic' || r.type == ''){
                                     _one = r.path.split('/')
                                     _two = currentPath.split('/')
                                     _one = _one.filter(item=>item!="")
                                     _two = _two.filter(item=>item!="")
+                                    // console.log(_one,_two)
                                  return check(_one,_two).response == "True"
                             // }else{
 
@@ -2515,9 +2594,11 @@ export class Qcom  {
                             // }
 
 
+
                         })[0];
+
                         if(route){
-                           console.log(_two)
+                          // console.log(_two)
                             // if(router.path.startsWith('/')){
                             //     if(route.path.startsWith('/Qcom')==false){
                             //         route.path = '/Qcom'
@@ -2536,7 +2617,7 @@ export class Qcom  {
                             //     }
                             // }
                             // console.log(_two[0])
-
+                            // console.log(route.path)
                             if(check(_one,_two).response == "True" && check(_one,_two).json[":id"] != undefined){
                                 let __myNewJson = {}
                                 for(let i in range(len(_one))){
@@ -3626,6 +3707,7 @@ $({
                     boxShadow: "0 2px 5px 0 rgba(0, 0, 0, 0.26)"
                 }
             })
+
             this.html(div((title+slot())))
 
         }
@@ -3884,54 +3966,62 @@ globalcss({'.mt1':{marginTop:'0.25rem'},'.mb1':{marginBottom:'0.25rem'},'.ml1':{
 $({
 
     name:'QcomHamburgerMenu',
-    // type:'shadow',
+    data:{
+        drawerElem:'',
+        iconElem:'',
+        drawer:'',
+        innerhtm:''
+    },
+    //type:'shadow',
     css:{ '.drawer .content .header': { 'height': '144px', 'background':'', 'position': 'relative' }, '.drawer .content .header .avatar': { 'background-image': 'url()', 'height': '64px', 'width': '64px', 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'border-radius': '100%', 'position': 'absolute', 'left': '16px', 'top': '16px', }, '.drawer .content .header .text': { 'height': '56px', 'position': 'absolute', 'bottom': '0', 'left': '0', 'width': '100%', 'box-sizing': 'border-box', 'padding': '8px 0', 'color': 'white', }, '.drawer .content .header .text .field': { 'padding-left': '16px', 'font-size': '14px', }, '.drawer .content .header .text .field.name': { 'font-weight': 'bold', }, '.drawer .content .header .text .field.info': { 'margin-top': '4px', }, '.drawer .content ul.menu': { 'padding': '8px 0', 'list-style': 'none', 'margin': '0', }, '.drawer .content ul.menu li.item': { 'display': 'block', 'font-size': '14px', 'font-weight': 'bold', 'height': '48px', 'line-height': '48px', 'padding-left': '72px', 'color': 'rgba(0, 0, 0, 0.87)', 'position': 'relative', }, '.drawer .content ul.menu li.item.subheader': { 'color': 'rgba(0, 0, 0, 0.54)', 'padding-left': '16px', 'margin-top': '8px', ' border-top': '1px solid rgba(0, 0, 0, 0.12)', }, '.drawer .content ul.menu li.item.subheader:after': { 'content': 'none', }, '.drawer .content ul.menu li.item:after': { 'content': "", 'background-image': "url('https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_brightness_high_black_24px.svg')", 'background-position': 'center', 'background-repeat': 'no-repeat', 'background-size': 'cover', 'height': '24px', 'width': '24px', 'position': 'absolute', 'left': '16px', 'top': '12px', 'opacity': '0.54' }, '.drawer .content ul.menu li.item:active': { 'background': 'rgba(0, 0, 0, 0.12)', }, '.rx_noselect': { '-webkit-touch-callout': 'none', '-webkit-user-select': 'none', '-khtml-user-select': 'none', '-moz-user-select': 'none', '-ms-user-select': 'none', 'user-select': 'none', }, '.drawer_bg': { 'position': 'fixed', 'background': 'rgba(0, 0, 0, 0.5)', 'top': '0', 'left': '0', 'right': "0", 'bottom': "0", 'width': '100%', 'height': '100%', 'z-index': '4', 'opacity': '0.001', '-webkit-transform': 'translateZ(0)', '-moz-transform': 'translateZ(0)', '-ms-transform': 'translateZ(0)', '-o-transform': 'translateZ(0)', 'transform': 'translateZ(0)', 'visibility': 'hidden', }, '.drawer': { 'max-width': '320px', 'width': '75%', 'height': '100%', 'left': '0px', 'top': '0', 'bottom': '0', '-webkit-transform': 'translateX(-100%)', '-moz-transform': 'translateX(-100%)', '-ms-transform':' translateX(-100%)', '-o-transform': 'translateX(-100%)', 'transform': 'translateX(-100%)', 'background': 'white', 'position': 'fixed', 'z-index': '5', 'opacity': '0.001', '-webkit-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-moz-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-ms-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', '-o-box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4),', 'box-shadow': '3px 0 16px -3px rgba(0, 0, 0, 0.4)', }, '.drawer .label': { 'position': 'absolute', 'top': '56px', 'bottom': '0', 'width': '32px', 'right': '-32px', }, '.drawer .antiSelect': { 'position': 'absolute', 'top': '0', 'left': '0', 'height': '100%', 'width': '100%', 'visibility': 'hidden', }, '.rx_icon .ic': {'position': 'absolute', 'width': '24px', 'height': '24px', }, '.rx_icon .ic .line': { 'position': 'absolute', 'left': '3px', 'right': '3px', 'height': '2px', 'background': 'white', 'outline': '1px solid transparent', }, '.rx_icon .ic .line.one': { 'top': '6px', '-webkit-transform-origin': 'right bottom', '-moz-transform-origin': 'right bottom', '-ms-transform-origin': 'right bottom', '-o-transform-origin': 'right bottom', 'transform-origin': 'right bottom', }, '.rx_icon .ic .line.two': { 'top': '11px' }, '.rx_icon .ic .line.thr': { '-webkit-transform-origin': 'right top', '-moz-transform-origin': 'right top', '-ms-transform-origin': 'right top', '-o-transform-origin': 'right top', 'transform-origin': 'right top', 'top': '16px' } },
     template:()=>div(
         btn({class:"rx_icon",id:"rx_icon"}),
     div({class:'drawer',id:'drawer'},
-    div({class:'content'}
+    div({id:'drawer_content',class:'content'}
     // ,div({class:'header'},
     //                         div({class:'avatar'}),
     //                             div({class:"text"},
     //                                 div({class:"field name"},'Demo Application'),
     //                                 div({class:"field info"},'Demo Info')
     //                             ))
-        ,this.innerHTML))),
+        ))),
     code:{
         onload:()=>{
-            globalcss({
-                '.drawer .content .header': {'background':theme.background}
-            })
-            var drawer,
-                drawerElem,
-                iconElem;
-            window.addEventListener("load", function (e) {
-                drawerElem = document.getElementById("drawer");
-                iconElem = document.getElementById("rx_icon");
-                drawer = new Drawer(drawerElem);
-                drawer.setDrawerIcon(new DrawerIcon(iconElem));
-                //Use methods
-                drawerElem.addEventListener('click',function () {
-                    drawer.closeDrawer()
-                });
-                drawerElem.style.userSelect = 'none'
-                // drawer.onOpenListener(function () {
-                //     console.log("open");
-                // });
-                // drawer.onCloseListener(function () {
-                //     console.log("close");
-                // });
-                // drawer.onMoveListener(function (x, percent, animation, duration) {
-                //     console.log(x + " " + percent + " " + animation + " " + duration);
-                // });
-                // drawer.openDrawer();
-                // drawer.closeDrawer();
-                // drawer.toggleDrawer();
-                // drawer.isOpen();
-                // drawer.resetIconOnClick();
 
-            });
-        }
+                   this.data.innerhtm = this.innerHTML
+
+                    globalcss({
+                        '.drawer .content .header': {'background':theme.background}
+                    })
+                    window.onload   = this.__reportWindowSize
+                    window.onresize = this.__reportWindowSize;
+
+
+        },
+        __reportWindowSize:() => {
+                if(window.innerWidth < 700){
+                    this.data.drawerElem = document.getElementById("drawer");
+                    this.data.iconElem = document.getElementById("rx_icon");
+                    this.data.drawer = new Drawer(this.data.drawerElem);
+                    this.data.drawer.setDrawerIcon(new DrawerIcon(this.data.iconElem));
+                    this.data.drawerElem.addEventListener('click',()=>{
+                        this.data.drawer.closeDrawer()
+                    })
+                    this.querySelector('#drawer_content').innerHTML = this.data.innerhtm
+
+                    //console.log(document.getElementById('drawer_content'))
+
+                    // this.querySelector('#drawer_content').innerHTML = this.data.innerhtm
+                }else{
+                    this.data.drawerElem = ''
+                    this.data.iconElem = ''
+                    this.data.drawer = ''
+                    //this.data.innerhtm = ''
+                    // console.log(this.innerHTML.)
+                    this.render()
+
+                }
+            }
     }
     // code:{
     //     onload:()=>{
