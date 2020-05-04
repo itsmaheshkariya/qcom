@@ -1,6 +1,10 @@
 # Qcom.io
 [![Dependency Status](https://david-dm.org/maheshkareeya/qcom.svg)](https://david-dm.org/maheshkareeya/qcom)
 [![devDependency Status](https://david-dm.org/maheshkareeya/cli/dev-status.svg)](https://david-dm.org/maheshkareeya/cli#info=devDependencies)
+
+[![Build Status](https://travis-ci.org/@qcom.io/qcom.svg?branch=master)](https://travis-ci.org/@qcom.io/qcom)
+[![Coverage Status](https://coveralls.io/repos/github/maheshkareeya/qcom/badge.svg?branch=master)](https://coveralls.io/github/maheshkareeya/qcom?branch=master)
+
 [![NPM version](https://badge.fury.io/js/%40qcom.io%2Fqcom.svg)](https://www.npmjs.com/package/@qcom.io/qcom)
 ![Downloads](https://img.shields.io/npm/dm/%40qcom.io%2Fqcom.svg?style=flat)
 ![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/qcom.png)

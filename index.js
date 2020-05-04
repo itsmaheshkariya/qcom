@@ -2208,13 +2208,14 @@ export let MakeClass = (classOf,attributes,hold) => {
             }
 
 
-            this.addEventListener('click',async(e)=>{
-                        if(e.target.getAttribute('click') != null){
+            this.event_manage=(name)=>{
+                this.addEventListener(name,async(e)=>{
+                        if(e.target.getAttribute(name) != null){
                         try{
-                            // if(e.target.getAttribute('click').split('.')[0] == 'this'){
+                            // if(e.target.getAttribute(name).split('.')[0] == 'this'){
                             //     console.log(this)
                             // }
-                            let __myAttributeIS = e.target.getAttribute('click')
+                            let __myAttributeIS = e.target.getAttribute(name)
                             if(__myAttributeIS.split('.')[0].startsWith('Qcom')==false)
                                 {
                                     __myAttributeIS = 'Qcom'+__myAttributeIS
@@ -2230,7 +2231,94 @@ export let MakeClass = (classOf,attributes,hold) => {
                     }else{
                         // console.log(e.target.shadowRoot.innerHTML)
                     }
-                },false)
+                },false)}
+
+                this.event_manage('abort')
+                this.event_manage('afterprint')
+                this.event_manage('animationend')
+                this.event_manage('animationiteration')
+                this.event_manage('animationstart')
+                this.event_manage('beforeprint')
+                this.event_manage('beforeunload')
+                this.event_manage('blur')
+                this.event_manage('canplay')
+                this.event_manage('canplaythrough')
+                this.event_manage('change')
+                this.event_manage('click')
+                this.event_manage('contextmenu')
+                this.event_manage('copy')
+                this.event_manage('cut')
+                this.event_manage('dblclick')
+                this.event_manage('drag')
+                this.event_manage('dragend')
+                this.event_manage('dragenter')
+                this.event_manage('dragleave')
+                this.event_manage('dragover')
+                this.event_manage('dragstart')
+                this.event_manage('drop')
+                this.event_manage('durationchange')
+                this.event_manage('ended')
+                this.event_manage('error')
+                this.event_manage('focus')
+                this.event_manage('focusin')
+                this.event_manage('focusout')
+                this.event_manage('fullscreenchange')
+                this.event_manage('fullscreenerror')
+                this.event_manage('hashchange')
+                this.event_manage('input')
+                this.event_manage('invalid')
+                this.event_manage('keydown')
+                this.event_manage('keypress')
+                this.event_manage('keyup')
+                this.event_manage('load')
+                this.event_manage('loadeddata')
+                this.event_manage('loadedmetadata')
+                this.event_manage('loadstart')
+                this.event_manage('message')
+                this.event_manage('mousedown')
+                this.event_manage('mouseenter')
+                this.event_manage('mouseleave')
+                this.event_manage('mousemove')
+                this.event_manage('mouseover')
+                this.event_manage('mouseout')
+                this.event_manage('mouseup')
+                this.event_manage('offline')
+                this.event_manage('online')
+                this.event_manage('open')
+                this.event_manage('pagehide')
+                this.event_manage('pageshow')
+                this.event_manage('paste')
+                this.event_manage('pause')
+                this.event_manage('play')
+                this.event_manage('playing')
+                this.event_manage('popstate')
+                this.event_manage('progress')
+                this.event_manage('ratechange')
+                this.event_manage('resize')
+                this.event_manage('reset')
+                this.event_manage('scroll')
+                this.event_manage('search')
+                this.event_manage('seeked')
+                this.event_manage('seeking')
+                this.event_manage('select')
+                this.event_manage('show')
+                this.event_manage('stalled')
+                this.event_manage('storage')
+                this.event_manage('submit')
+                this.event_manage('suspend')
+                this.event_manage('timeupdate')
+                this.event_manage('toggle')
+                this.event_manage('touchcancel')
+                this.event_manage('touchend')
+                this.event_manage('touchmove')
+                this.event_manage('touchstart')
+                this.event_manage('transitionend')
+                this.event_manage('unload')
+                this.event_manage('volumechange')
+                this.event_manage('waiting')
+                this.event_manage('wheel')
+
+
 
 
         }
