@@ -1,12 +1,13 @@
 # Qcom.io
-[![Dependency Status](https://david-dm.org/maheshkareeya/qcom.svg)](https://david-dm.org/maheshkareeya/qcom)
-[![devDependency Status](https://david-dm.org/maheshkareeya/cli/dev-status.svg)](https://david-dm.org/maheshkareeya/cli#info=devDependencies)
+<!-- [![Dependency Status](https://david-dm.org/maheshkareeya/qcom.svg)](https://david-dm.org/maheshkareeya/qcom)
+[![devDependency Status](https://david-dm.org/maheshkareeya/cli/dev-status.svg)](https://david-dm.org/maheshkareeya/cli#info=devDependencies) -->
 
 <!-- [![Build Status](https://travis-ci.org/@qcom.io/qcom.svg?branch=master)](https://travis-ci.org/@qcom.io/qcom) -->
 <!-- [![Coverage Status](https://coveralls.io/repos/github/maheshkareeya/qcom/badge.svg?branch=master)](https://coveralls.io/github/maheshkareeya/qcom?branch=master) -->
 
 [![NPM version](https://badge.fury.io/js/%40qcom.io%2Fqcom.svg)](https://www.npmjs.com/package/@qcom.io/qcom)
 ![Downloads](https://img.shields.io/npm/dm/%40qcom.io%2Fqcom.svg?style=flat)
+
 ![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/qcom.png)
 ### Javascript Framework
 
@@ -29,7 +30,7 @@ http://localhost:8080
 
 ```html
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $() // Now check your Inspector of Browser He will guide you for further steps
 </script>
@@ -39,7 +40,7 @@ http://localhost:8080
 <qcom-hello-world></qcom-hello-world>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
@@ -61,7 +62,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-functions></qcom-functions>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
   $({
       name:'QcomFunctions',
       template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
@@ -82,7 +83,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-data></qcom-data>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
   $({
       name:'QcomData',
       data:{
@@ -112,7 +113,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-loop></qcom-loop>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
   $({
       name:'QcomLoop',
       data:{
@@ -146,7 +147,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-get></qcom-get>
 
 <script type="module">
-import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
 $({
     name:'QcomGet',
     data:{
@@ -183,7 +184,7 @@ $({
 <qcom-css-example></qcom-css-example>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
   $({
       name:'QcomCssExample',
       globalcss:{ /* Global CSS*/
@@ -215,7 +216,7 @@ $({
 ```html
 <qcom-main></qcom-main>
 <script type="module">
-import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
+import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
     let QcomOne = {
         name:'QcomOne',
         data:{
@@ -293,24 +294,6 @@ import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.js'
 
 ### Demo
 ![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/result.png)
-
-## Functions
-
-| btn({is:''})                 	| is:'sm'             	| is:'md'            	| is:'lg'            	| is:'block'                 	| is:'link'         	|
-|------------------------------	|---------------------	|--------------------	|--------------------	|----------------------------	|-------------------	|
-| center()                     	| left()              	|right()      	        | justify()          	| container()                	| row()             	|
-| col(is:'12-6-6') 	| div()               	| p()                	| pre()              	| h1()                       	| h2()              	|
-| h3()                         	| h4()                	| h5()               	| h6()               	| head()                     	| title()           	|
-| body()                       	| ul()                	| ol()               	| li()               	| table()                    	| thead()           	|
-| tbody()                      	| th()                	| tr()               	| td()               	| header()                   	| footer()          	|
-| nav()                        	| button()            	| input()            	| form()             	| option()                   	| select()          	|
-| span()                       	| textarea()          	| slot()             	| i()                	| view()                     	| label()           	|
-| icon('material-icon')   	    | range()             	| len()              	| getid(id)        	    | gethtml(id)              	    | gettext(id)     	    |
-| change(id,html)     	        | list([])         	    | color.color_name   	|                    	| find()                      	|                   	|
-| click:'name.function()' 	    | rev(str)       	    | random([])         	| random_keys([])    	| random_values([])          	| String.hash()     	|
-| qcom.get(url)              	| qcom.post(url,{}) 	| qcom.put(url,{}) 	    | qcom.delete(url) 	    | await import_module()    	    | camelCaseToDash() 	|
-| dashToCamelCase()            	| dashToPascalCase()  	| isFunction()       	|             	    | 
-
 
 ## License
 
