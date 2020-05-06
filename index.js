@@ -1083,7 +1083,7 @@ let syntax = () =>{
     console.warn(`HTML :    <qcom-app></qcom-app> // no need to write tag as well I'll do it 4 u ok check your output`)
 }
 
-export let $ = (val) => {
+let $ = (val) => {
     if(typeof val == 'object'){
         new Qcom(val)
         if(val.class == 'QcomApp' && val.template == undefined){
@@ -1156,6 +1156,7 @@ export let $ = (val) => {
 if(document.querySelector('script').innerHTML.includes('$(')==false){
 syntax()
 }
+export default $
 export let $router = (val) =>{
     $({
         router:{

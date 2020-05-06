@@ -16,8 +16,7 @@
 ```bash
 npm install @qcom.io/qcom
 ```
-### Or
-#### CLI Installation for Quick Start
+#### Or CLI Installation for Quick Start
 ```bash
 npm install -g @qcom.io/qcom-cli
 qcom --install && npm start
@@ -25,12 +24,11 @@ qcom --install && npm start
 ### check url
 http://localhost:8080
 
-### Or
-#### (Use following code to your html file)
+#### Or Use following code to your html file
 
 ```html
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+  import {$} from '//unpkg.com/@qcom.io/qcom'
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $() // Now check your Inspector of Browser He will guide you for further steps
 </script>
@@ -40,7 +38,7 @@ http://localhost:8080
 <qcom-hello-world></qcom-hello-world>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+  import {$} from '//unpkg.com/@qcom.io/qcom'
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
@@ -62,7 +60,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-functions></qcom-functions>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+  import {$} from '//unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomFunctions',
       template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
@@ -83,7 +81,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-data></qcom-data>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+  import $ from '//unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomData',
       data:{
@@ -97,11 +95,11 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
       code:{
             add:()=>{
                     this.data.counter +=  1
-                    this.updater()
+                    this.render()
             },
             sub:()=>{
                     this.data.counter -=  1
-                    this.updater()
+                    this.render()
             }
       }
   })
@@ -113,7 +111,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-loop></qcom-loop>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+  import $ from '//unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomLoop',
       data:{
@@ -147,7 +145,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-get></qcom-get>
 
 <script type="module">
-import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+import $ from '//unpkg.com/@qcom.io/qcom'
 $({
     name:'QcomGet',
     data:{
@@ -184,7 +182,7 @@ $({
 <qcom-css-example></qcom-css-example>
 
 <script type="module">
-  import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+  import $ from '//unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomCssExample',
       globalcss:{ /* Global CSS*/
@@ -216,7 +214,7 @@ $({
 ```html
 <qcom-main></qcom-main>
 <script type="module">
-import {$} from 'https://unpkg.com/@qcom.io/qcom@latest/index.min.js'
+import $ from '//unpkg.com/@qcom.io/qcom'
     let QcomOne = {
         name:'QcomOne',
         data:{
