@@ -28,7 +28,7 @@ http://localhost:8080
 
 ```html
 <script type="module">
-  import {$} from '//unpkg.com/@qcom.io/qcom'
+  import $ from '//unpkg.com/@qcom.io/qcom'
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $() // Now check your Inspector of Browser He will guide you for further steps
 </script>
@@ -38,7 +38,7 @@ http://localhost:8080
 <qcom-hello-world></qcom-hello-world>
 
 <script type="module">
-  import {$} from '//unpkg.com/@qcom.io/qcom'
+  import $ from '//unpkg.com/@qcom.io/qcom'
   // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
@@ -60,7 +60,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-functions></qcom-functions>
 
 <script type="module">
-  import {$} from '//unpkg.com/@qcom.io/qcom'
+  import $ from '//unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomFunctions',
       template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
