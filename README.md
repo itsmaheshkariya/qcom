@@ -29,7 +29,7 @@ http://localhost:8080
 ```html
 <script type="module">
   import $ from '//unpkg.com/@qcom.io/qcom'
-  // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
+  // Or import $ from './node_modules/@qcom.io/qcom/index.js'
   $() // Now check your Inspector of Browser He will guide you for further steps
 </script>
 ```
@@ -39,7 +39,7 @@ http://localhost:8080
 
 <script type="module">
   import $ from '//unpkg.com/@qcom.io/qcom'
-  // Or import {$} from './node_modules/@qcom.io/qcom/index.js'
+  // Or import $ from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
       template:()=>h1('Hello World')
