@@ -622,7 +622,10 @@ export let $sw = async(val) => {
 
     if ('serviceWorker' in navigator) {
         try {
-        await navigator.serviceWorker.register(val);
+            if(val.startsWith('/') == false || val.startsWith('./') == false){
+                val = '/'+val
+            }
+        await navigator.serviceWorker.register(window.location.origin+val);
         } catch (e) {
         console.log(`SW registration failed`);
         }

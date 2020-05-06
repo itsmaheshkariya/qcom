@@ -293,6 +293,17 @@ import $ from '//unpkg.com/@qcom.io/qcom'
 ### Demo
 ![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/result.png)
 
+### Colors 
+![color00](https://unpkg.com/@qcom.io/qcom@latest/raw/color00.png)
+![color0](https://unpkg.com/@qcom.io/qcom@latest/raw/color0.png)
+![color1](https://unpkg.com/@qcom.io/qcom@latest/raw/color1.png)
+![color2](https://unpkg.com/@qcom.io/qcom@latest/raw/color2.png)
+![color3](https://unpkg.com/@qcom.io/qcom@latest/raw/color3.png)
+![color4](https://unpkg.com/@qcom.io/qcom@latest/raw/color4.png)
+![color5](https://unpkg.com/@qcom.io/qcom@latest/raw/color5.png)
+
+
+
 ## License
 
 [MIT](LICENSE)
