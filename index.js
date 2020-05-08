@@ -44,13 +44,13 @@ if(navigator.onLine == true)
     var linkone = document.createElement('link');
     linkone.rel = 'stylesheet';
     linkone.type = 'text/css';
-    linkone.href = 'https://unpkg.com/@qcom.io/qcom@latest/icons.css';
+    linkone.href = 'https://unpkg.com/@qcom.io/qcom@1.0.36/icons.css';
     headtag.appendChild(linkone);
 
     var linktwo = document.createElement('link');
     linktwo.rel = 'stylesheet';
     linktwo.type = 'text/css';
-    linktwo.href = 'https://unpkg.com/@qcom.io/qcom@latest/fonts.css';
+    linktwo.href = 'https://unpkg.com/@qcom.io/qcom@1.0.36/fonts.css';
     headtag.appendChild(linktwo);
 
 

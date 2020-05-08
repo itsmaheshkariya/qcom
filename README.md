@@ -8,7 +8,7 @@
 [![NPM version](https://badge.fury.io/js/%40qcom.io%2Fqcom.svg)](https://www.npmjs.com/package/@qcom.io/qcom)
 ![Downloads](https://img.shields.io/npm/dm/%40qcom.io%2Fqcom.svg?style=flat)
 
-![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/qcom.png)
+![demoofqcom](https://unpkg.com/@qcom.io/qcom@1.0.36/qcom.png)
 ### Javascript Framework
 
 #### Installation
@@ -28,7 +28,7 @@ http://localhost:8080
 
 ```html
 <script type="module">
-  import $ from '//unpkg.com/@qcom.io/qcom'
+  import $ from 'https://unpkg.com/@qcom.io/qcom'
   // Or import $ from './node_modules/@qcom.io/qcom/index.js'
   $() // Now check your Inspector of Browser He will guide you for further steps
 </script>
@@ -38,7 +38,7 @@ http://localhost:8080
 <qcom-hello-world></qcom-hello-world>
 
 <script type="module">
-  import $ from '//unpkg.com/@qcom.io/qcom'
+  import $ from 'https://unpkg.com/@qcom.io/qcom'
   // Or import $ from './node_modules/@qcom.io/qcom/index.js'
   $({
       name:'QcomHelloWorld',
@@ -48,9 +48,11 @@ http://localhost:8080
 ```
 
 ## Rules 
+`HTML`
 ```html 
 <h1 class="head"  style = "color:red;  background-color:  yellow"    id="heading" > I am H1 </h1>
 ```
+`Qcom`
 ```js
 h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading' }, 'I am H1' )
 ```
@@ -60,7 +62,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-functions></qcom-functions>
 
 <script type="module">
-  import $ from '//unpkg.com/@qcom.io/qcom'
+  import $ from 'https://unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomFunctions',
       template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
@@ -81,7 +83,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-data></qcom-data>
 
 <script type="module">
-  import $ from '//unpkg.com/@qcom.io/qcom'
+  import $ from 'https://unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomData',
       data:{
@@ -111,7 +113,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-loop></qcom-loop>
 
 <script type="module">
-  import $ from '//unpkg.com/@qcom.io/qcom'
+  import $ from 'https://unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomLoop',
       data:{
@@ -145,7 +147,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
 <qcom-get></qcom-get>
 
 <script type="module">
-import $ from '//unpkg.com/@qcom.io/qcom'
+import $ from 'https://unpkg.com/@qcom.io/qcom'
 $({
     name:'QcomGet',
     data:{
@@ -182,7 +184,7 @@ $({
 <qcom-css-example></qcom-css-example>
 
 <script type="module">
-  import $ from '//unpkg.com/@qcom.io/qcom'
+  import $,{color} from 'https://unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomCssExample',
       globalcss:{ /* Global CSS*/
@@ -193,9 +195,9 @@ $({
       },
       css:{ /* Internal CSS*/
           h1:{
-              color:'red',
+              color:color.red,
               cursor:'pointer',
-              backgroundColor:'yellow'
+              backgroundColor:color.yellow
           },
           '.mt':{
               marginTop:'5px'
@@ -214,7 +216,7 @@ $({
 ```html
 <qcom-main></qcom-main>
 <script type="module">
-import $ from '//unpkg.com/@qcom.io/qcom'
+import $ from 'https://unpkg.com/@qcom.io/qcom'
     let QcomOne = {
         name:'QcomOne',
         data:{
@@ -291,16 +293,51 @@ import $ from '//unpkg.com/@qcom.io/qcom'
 ```
 
 ### Demo
-![demoofqcom](https://unpkg.com/@qcom.io/qcom@latest/result.png)
+![demoofqcom](https://unpkg.com/@qcom.io/qcom@1.0.36/result.png)
+
+
+
+**Grammar:**
+
+```
+                                            function
+     ┌─────────-───────────────────────────────┴────────────────────────────────────────────────────────┐
+     │                     │      separators                                                            |
+     │                   ┌─│──────────┴───┬────────────────┬───────────────────────────┐                |
+     |                   ↓                ↓                ↓                           ↓                |
+    p(  { to:'firstname' ,   class:'mt12' , id:'firstname' , style: {color:color.red}} , 'Hello World'  )
+            └───┬───┘          └───┬───┘     └────┬───┘       └────┬────────┘                 |
+                ┴───────────┬──────┴─────-──-─────┘-──-─────-─────-┘                          |
+                       attributes                                                           Text
+```
+
+## Configuration
+
+
+<details>
+<summary>Using <code>color</code> : </summary>
+<pre><code>
+import $,{color} from 'https://unpkg.com/@qcom.io/qcom'
+$({
+    theme:{
+        color:color.red,
+        background:color.yellow
+    }
+})
+</code></pre>
+</details>
+
+
+
 
 ### Colors 
-![color00](https://unpkg.com/@qcom.io/qcom@latest/raw/color00.png)
-![color0](https://unpkg.com/@qcom.io/qcom@latest/raw/color0.png)
-![color1](https://unpkg.com/@qcom.io/qcom@latest/raw/color1.png)
-![color2](https://unpkg.com/@qcom.io/qcom@latest/raw/color2.png)
-![color3](https://unpkg.com/@qcom.io/qcom@latest/raw/color3.png)
-![color4](https://unpkg.com/@qcom.io/qcom@latest/raw/color4.png)
-![color5](https://unpkg.com/@qcom.io/qcom@latest/raw/color5.png)
+![color00](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color00.png)
+![color0](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color0.png)
+![color1](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color1.png)
+![color2](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color2.png)
+![color3](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color3.png)
+![color4](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color4.png)
+![color5](https://unpkg.com/@qcom.io/qcom@1.0.36/raw/color5.png)
 
 
 
