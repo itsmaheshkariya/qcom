@@ -1078,56 +1078,57 @@ export var find = (function () {
 })();
 
 let syntax = () =>{
-    console.warn('You need more practice I think. well you can copy pest following code.')
-    console.warn(`JS :      $({
-        name:'QcomApp',
-        template:()=>h1('Hello World')
-    })`)
-    console.warn(`HTML :    <qcom-app></qcom-app> // no need to write tag as well I'll do it 4 u ok check your output`)
+    // console.info('You need more practice I think. well you can copy pest following code.')
+    // console.info(`JS :      $({
+    //     name:'QcomApp',
+    //     template:()=>h1('Hello World')
+    // })`)
+    // console.info(`HTML :    <qcom-app></qcom-app> // no need to write tag as well I'll do it 4 u ok check your output`)
 }
 
 let $ = (val) => {
     if(typeof val == 'object'){
         new Qcom(val)
         if(val.class == 'QcomApp' && val.template == undefined){
-            console.warn('Step1: ༼ つ ◕_◕ ༽つ template is required dude. check this out.')
-            console.warn(`JS :      $({
-                template:()=>div(h1('App'))
-            })`)
+            // console.info('Step1: ༼ つ ◕_◕ ༽つ template is required dude. check this out.')
+            // console.info(`JS :      $({
+            //     template:()=>div(h1('App'))
+            // })`)
         }else if(val.class == 'QcomApp' && val.template != undefined && val.router == undefined){
-            console.warn('Step2: you have to use router now if you want to or can proceed ok bro.')
-            console.warn(`JS :
-            let PageOne = {
-                name:'PageOne',
-                template:()=>h1('I am Page One')
-            }
-            let PageTwo = {
-                name:'PageTwo',
-                template:()=>h1('I am Page Two')
-            }
-            $({
-                template:()=>div(
-                        btn({route:'/PageOne',is:'md'},'PageOne'),
-                        btn({route:'/PageTwo',is:'md'},'PageTwo'),
-                        div({id:'router'})
-                    ),
-                    include:[
-                        PageOne,
-                        PageTwo
-                    ],
-                router:{
-                    error:'404',
-                    root:'PageOne',
-                    view:'router',
-                    links:['/PageOne','/PageTwo']
-                }
-            })`)
-            console.warn(`on server side :   npm init -y && npm i express -S && touch server.js && node server.js
-      server.js :    const express = require('express');express().use(express.static('.')).get('*',(req,res)=>res.sendFile(__dirname+'/index.html')).listen(8082)
-            `)
+    //         console.info('Step2: you have to use router now if you want to or can proceed ok bro.')
+    //         console.info(`JS :
+    //         let PageOne = {
+    //             name:'PageOne',
+    //             template:()=>h1('I am Page One')
+    //         }
+    //         let PageTwo = {
+    //             name:'PageTwo',
+    //             template:()=>h1('I am Page Two')
+    //         }
+    //         $({
+    //             template:()=>div(
+    //                     btn({route:'/PageOne',is:'md'},'PageOne'),
+    //                     btn({route:'/PageTwo',is:'md'},'PageTwo'),
+    //                     div({id:'router'})
+    //                 ),
+    //                 include:[
+    //                     PageOne,
+    //                     PageTwo
+    //                 ],
+    //             router:{
+    //                 error:'404',
+    //                 root:'PageOne',
+    //                 view:'router',
+    //                 links:['/PageOne','/PageTwo']
+    //             }
+    //         })`)
+    //         console.info(`on server side :   npm init -y && npm i express -S && touch server.js && node server.js
+    //   server.js :    const express = require('express');express().use(express.static('.')).get('*',(req,res)=>res.sendFile(__dirname+'/index.html')).listen(8082)
+    //         `)
+
         }if(val.class == 'QcomApp' && val.template != undefined && val.router != undefined){
-            console.info('In HTML:              <h1 class="head"  style = "color:red;  background-color:  yellow"    id="heading" > I am H1 </h1>')
-            console.info(`In QCOM:              h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading' }, 'I am H1' )`)
+            // console.info('In HTML:              <h1 class="head"  style = "color:red;  background-color:  yellow"    id="heading" > I am H1 </h1>')
+            // console.info(`In QCOM:              h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading' }, 'I am H1' )`)
 
             //console.warn('well you can use Grid system')
             // console.warn(`JS :     div(
@@ -1628,13 +1629,8 @@ export let MakeClass = (classOf,attributes,hold) => {
                 this.include = hold.include
                 this.include.forEach(item=>{
                      $(item)
-                    //console.log(item.split('.')[len(item.split('.'))-2])
                 })
             }
-            // if(hold.css){
-            //     this.css = hold.css
-            // }
-
             if(hold.methods){
                 this.methods = hold.methods;
                 for(let i = 0;i<Object.keys(this.methods).length;i++){
@@ -1646,21 +1642,13 @@ export let MakeClass = (classOf,attributes,hold) => {
                     eval('this.'+Object.keys(this.methods)[i]+'='+Object.values(this.methods)[i]+'')
                 }
             }
-            // if(hold.newhtml){
-            //     this.newhtml = hold.newhtml
-            // }
             if(hold.template){
                 this.template = hold.template
                 eval('this.template'+'='+this.template)
-
             }
             if(hold.created){
                 this.created = hold.created;
-                // template1()
                 eval('('+this.created+')()');
-
-
-                //
             }else{
                 if((hold.class == 'QcomApp' || hold.name == 'QcomApp')&& hold.template == undefined){
                     this.html($('QcomLayout')())
@@ -1684,30 +1672,47 @@ export let MakeClass = (classOf,attributes,hold) => {
                     }
                 }
             }
-
-
+            this.MyElement = (val) =>{
+                if(val.parentElement.nodeName.startsWith('QCOM-')==true){
+                    return val.parentElement
+                }else{
+                    this.MyElement(val.parentElement)
+                }
+            }
             this.event_manage=(name)=>{
+
                 this.addEventListener(name,async(e)=>{
                         if(e.target.getAttribute(name) != null){
                         try{
-                            // if(e.target.getAttribute(name).split('.')[0] == 'this'){
-                            //     console.log(this)
-                            // }
-                            let __myAttributeIS = e.target.getAttribute(name)
-                            if(__myAttributeIS.split('.')[0].startsWith('Qcom')==false)
-                                {
-                                    __myAttributeIS = 'Qcom'+__myAttributeIS
-                                }
-                            if(__myAttributeIS.split('.')[0]==hold.class){
-                                // console.log('this.'+__myAttributeIS.split('.')[1])
-                               eval('this.'+__myAttributeIS.split('.')[1])
+                            let __store_function_here = e.target.getAttribute(name)
+                            if(__store_function_here.startsWith('()=>'))
+                            {
+                                    let __myAttributeIS = __store_function_here.slice(4,len(__store_function_here))
+                                    if(__myAttributeIS.split('.')[0].startsWith('Qcom')==false)
+                                        {
+                                            __myAttributeIS = 'Qcom'+__myAttributeIS
+                                        }
 
-                            }
-                            // eval(__myAttributeIS)
+                                        // if(this.nodeName == 'QCOM-APP')
+                                        if(this.parentElement.nodeName == 'BODY')
+                                        {
+                                            let __currentElementIs = this.querySelector(camelCaseToDash(__myAttributeIS.split('.')[0]))
+                                        if(__currentElementIs != null){
+                                                if(__myAttributeIS.split('.')[0] == __currentElementIs.class){
+                                                let _fun = __myAttributeIS.split('.')[1]
+                                                eval('__currentElementIs.'+_fun)
+                                            }
+                                        }
+                                        else {
+                                                if(this.class == __myAttributeIS.split('.')[0])
+                                                eval('this.'+__myAttributeIS.split('.')[1])
+                                            }
+                                    }
+
+                                }
                         }catch(err) {
                         }
                     }else{
-                        // console.log(e.target.shadowRoot.innerHTML)
                     }
                 },false)}
 

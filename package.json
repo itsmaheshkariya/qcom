@@ -1,20 +1,20 @@
 {
   "name": "@qcom.io/qcom",
-  "version": "1.0.37",
-  "description": "A Brand new Javascript Framework for creating Custom web components with Dynamic HTML generator functions. No more HTML tags and css styling required.",
+  "version": "1.0.38",
+  "description": "Qcom is a Javascript Framework for creating Custom web components or web Elements with Dynamic HTML generating functions. No more HTML tags and css styling required.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "@qcom.io/qcom-cli",
-    "framework",
-    "library",
-    "js",
-    "es6",
-    "es2020",
-    "qcom",
-    "Web elements",
+    "Framework",
+    "Library",
+    "Js",
+    "ES6",
+    "ES2020",
+    "@qcom.io",
+    "Web Elements",
     "Web Components",
     "HTMLElement"
   ],

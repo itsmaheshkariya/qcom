@@ -65,7 +65,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
   import $ from 'https://unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomFunctions',
-      template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
+      template:()=>div(h1({click:()=>QcomFunctions.log()},'Click Here')),
       code:{
           log:()=>{
               //Do something here
@@ -91,8 +91,8 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
       },
       template:()=>div( /* div must be here to wrap all internal tags*/
                         h1(this.data.counter),
-                        button({click:'QcomData.add()'},'+'),
-                        button({click:'QcomData.sub()'},'-')
+                        button({click:()=>QcomData.add()},'+'),
+                        button({click:()=>QcomData.sub()},'-')
                      ),
       code:{
             add:()=>{
@@ -240,7 +240,7 @@ import $ from 'https://unpkg.com/@qcom.io/qcom'
                     input({id:'name',class:'mb6',placeholder:'Name'}),
                     input({id:'email',class:'mb6',placeholder:'Email'}),
                     input({id:'password',class:'mb6',placeholder:'Password'}),
-                    right(btn({click:'QcomTwo.post()',is:'md'},'Submit')))
+                    right(btn({click:()=>QcomTwo.post(),is:'md'},'Submit')))
             )),
             col(table(
                 tr(
@@ -300,22 +300,22 @@ import $ from 'https://unpkg.com/@qcom.io/qcom'
 **Grammar:**
 
 ```
-                                            function
-     ┌─────────-───────────────────────────────┴────────────────────────────────────────────────────────┐
-     │                     │      separators                                                            |
-     │                   ┌─│──────────┴───┬────────────────┬───────────────────────────┐                |
-     |                   ↓                ↓                ↓                           ↓                |
-    p(  { to:'firstname' ,   class:'mt12' , id:'firstname' , style: {color:color.red}} , 'Hello World'  )
-            └───┬───┘          └───┬───┘     └────┬───┘       └────┬────────┘                 |
-                ┴───────────┬──────┴─────-──-─────┘-──-─────-─────-┘                          |
-                       attributes                                                           Text
+                                        function
+ ┌─────────-───────────────────────────────┴────────────────────────────────────────────────────────┐
+ │                            separators                                                            |
+ │                   ┌────────────┴───┬────────────────┬───────────────────────────┐                |
+ |                   ↓                ↓                ↓                           ↓                |
+p(  { to:'firstname' ,   class:'mt12' , id:'firstname' , style: {color:color.red} }, 'Hello World'  )
+        └───┬───┘          └───┬───┘     └────┬───┘       └────┬────────┘                 |
+            ┴───────────┬──────┴─────-──-─────┘-──-─────-─────-┘                          |
+                   attributes                                                           Text
 ```
 
 ## Configuration
 
 
 <details>
-<summary>Using <code>color</code> : </summary>
+<summary>Use <code>color</code> : For color coding </summary>
 <pre><code>
 import $,{color} from 'https://unpkg.com/@qcom.io/qcom'
 $({
@@ -326,7 +326,34 @@ $({
 })
 </code></pre>
 </details>
-
+<br>
+<details>
+<summary>Use <code>to</code> : For Two way data binding</summary>
+<pre><code>
+        input({to:'email'}),
+            p({to:'email'},'')
+</code></pre>
+</details>
+<br>
+<details>
+<summary>Use <code>router</code> : For static and dynamic routing</summary>
+<pre><code>
+    template:()=>div(
+            appbar(
+                btn({route:'/QcomOne',is:'link', class:'ml12'},'One'),
+                btn({route:'/QcomTwo',is:'link', class:'ml12'},'Two'),
+            ),
+            div({class:'mt12', id:'root'})    //<-|
+        ),                                   //   |
+        include:[QcomOne,QcomTwo,QcomError],//    |
+        router:{                           //     |
+            root:'QcomOne',               //      |
+            view:'root', // id of div <-----------|
+            error:$('QcomError')(),
+            links:['QcomOne','QcomTwo']
+        }
+</code></pre>
+</details>
 
 
 
