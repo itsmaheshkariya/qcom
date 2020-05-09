@@ -65,7 +65,7 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
   import $ from 'https://unpkg.com/@qcom.io/qcom'
   $({
       name:'QcomFunctions',
-      template:()=>div(h1({click:()=>QcomFunctions.log()},'Click Here')),
+      template:()=>div(h1({click:'QcomFunctions.log()'},'Click Here')),
       code:{
           log:()=>{
               //Do something here
@@ -91,8 +91,8 @@ h1({class:'head', style:{ color:'red', backgroundColor : 'Yellow' }, id:'heading
       },
       template:()=>div( /* div must be here to wrap all internal tags*/
                         h1(this.data.counter),
-                        button({click:()=>QcomData.add()},'+'),
-                        button({click:()=>QcomData.sub()},'-')
+                        button({click:'QcomData.add()'},'+'),
+                        button({click:'QcomData.sub()'},'-')
                      ),
       code:{
             add:()=>{
@@ -240,7 +240,7 @@ import $ from 'https://unpkg.com/@qcom.io/qcom'
                     input({id:'name',class:'mb6',placeholder:'Name'}),
                     input({id:'email',class:'mb6',placeholder:'Email'}),
                     input({id:'password',class:'mb6',placeholder:'Password'}),
-                    right(btn({click:()=>QcomTwo.post(),is:'md'},'Submit')))
+                    right(btn({click:'QcomTwo.post()',is:'md'},'Submit')))
             )),
             col(table(
                 tr(

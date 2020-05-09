@@ -1685,9 +1685,9 @@ export let MakeClass = (classOf,attributes,hold) => {
                         if(e.target.getAttribute(name) != null){
                         try{
                             let __store_function_here = e.target.getAttribute(name)
-                            if(__store_function_here.startsWith('()=>'))
-                            {
-                                    let __myAttributeIS = __store_function_here.slice(4,len(__store_function_here))
+                            // if(__store_function_here.startsWith('()=>'))
+                            // {
+                                    let __myAttributeIS = __store_function_here
                                     if(__myAttributeIS.split('.')[0].startsWith('Qcom')==false)
                                         {
                                             __myAttributeIS = 'Qcom'+__myAttributeIS
@@ -1709,7 +1709,7 @@ export let MakeClass = (classOf,attributes,hold) => {
                                             }
                                     }
 
-                                }
+                                // }
                         }catch(err) {
                         }
                     }else{
