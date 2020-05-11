@@ -1,6 +1,6 @@
 {
   "name": "@qcom.io/qcom",
-  "version": "1.0.39",
+  "version": "1.0.40",
   "description": "Qcom is a Javascript Framework for creating Custom web components or web Elements with Dynamic HTML generating functions. No more HTML tags and css styling required.",
   "main": "index.js",
   "scripts": {
